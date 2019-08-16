@@ -6,7 +6,7 @@ Boostrapped with creare-react-app.
 Uses pusher for realtime functionalities.
 
 Functionality: 
--authenthicate user
+-authenthicate user ( please use User to log in)
 -fetch messages
 -send simple messages
 -display rooms
