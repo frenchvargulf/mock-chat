@@ -3,9 +3,7 @@ import '../App.css';
 import Chatkit from '@pusher/chatkit-client';
 import Message from './Message';
 import TypingIndicator from './TypingIndicator';
-import WhosOnlineList from './WhosOnlineList'
-import RoomList from './RoomList'
-import NewRoomForm from './NewRoom'
+import MenuContainer from './Nav';
 
 class Chat extends Component {  
   constructor(props){
@@ -17,12 +15,12 @@ class Chat extends Component {
       typingUsers: [],
       chatInput: "",
       joinableRooms: [],
-      joinedRooms: []
+      joinedRooms: [],
     }        
-    this.setChatInput = this.setChatInput.bind(this);
+    // this.setChatInput = this.setChatInput.bind(this);
     this.state.currentUser.sendMessage = this.sendMessage.bind(this);
     // this._handleKeyPress = this._handleKeyPress.bind(this);
-    this._onClick = this._onClick.bind(this);
+    // this._onClick = this._onClick.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.sendTypingEvent = this.sendTypingEvent.bind(this);
 
@@ -31,16 +29,18 @@ class Chat extends Component {
     this.createRoom = this.createRoom.bind(this)
   }      
   // update the input field when the user types something
-  setChatInput(event){
-    this.setState({
-      chatInput: event.target.value
-    });
-  }      
+  // setChatInput(event){
+  //   this.setState({
+  //     chatInput: event.target.value,
+  //     timestamp: event.target.timestamp,
+  //   }); 
+  // }   
+  
   sendMessage(currentUser) {
     if(this.state.chatInput){
       currentUser.sendMessage({
         text: this.state.chatInput,
-        roomId: "72a1d5fa-2e26-47e2-b9d0-3dae6002d14d",
+        roomId: "3acefd1b-2452-495f-bb56-91880b939c84",
       })
     }  
     this.setState({ chatInput: ""})          
@@ -52,10 +52,10 @@ class Chat extends Component {
   //         }
   //     }    
   
-  _onClick(e){
-    console.log(this.sendMessage)
-    this.sendMessage(this.state.currentUser)
-  }  
+  // _onClick(e){
+  //   this.sendMessage(this.state.currentUser)
+    
+  // }  
 
   onSubmit(e){
     e.preventDefault();
@@ -65,7 +65,7 @@ class Chat extends Component {
   sendTypingEvent(event) {
     console.log("Event typing")
     this.state.currentUser
-      .isTypingIn({ roomId: "72a1d5fa-2e26-47e2-b9d0-3dae6002d14d", })
+      .isTypingIn({ roomId: "3acefd1b-2452-495f-bb56-91880b939c84", })
       .catch(error => console.error('error', error))
       this.setState({
         chatInput: event.target.value
@@ -126,20 +126,21 @@ class Chat extends Component {
         this.setState({ currentUser })
         this.getRooms()
         return currentUser.subscribeToRoom({
-          roomId: "72a1d5fa-2e26-47e2-b9d0-3dae6002d14d",
+          roomId: "3acefd1b-2452-495f-bb56-91880b939c84",
           messageLimit: 100,
           hooks: {
             onMessage: message => {
                             let newMessages = this.state.messages;           
                             newMessages.push(<Message 
-                                                        key={ 
-                                                            this.state.messages.length 
-                                                        } 
-                                                        senderId={ 
-                                                            message.senderId 
-                                                        } 
-                                                        text={ message.text 
-                                                        }/>)         
+                                                    key={ 
+                                                        this.state.messages.length 
+                                                    } 
+                                                    senderId={ 
+                                                        message.senderId 
+                                                    }
+                                                    
+                                                    text={ message.text 
+                                                    }/>)         
                             this.setState({messages: newMessages})
             },
             onUserStartedTyping: user => {
@@ -166,51 +167,52 @@ class Chat extends Component {
 
   render() {
     return ( 
-      <div className="chatContainer">
-      <div className="chatwrapper">
-        <aside className="whosOnlineListContainer">
-        <WhosOnlineList
-            currentUser={this.state.currentUser}
-            users={this.state.currentRoom.users}
-          />
-        <RoomList
-                    subscribeToRoom={this.subscribeToRoom}
-                    rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
-                    roomId={this.state.roomId} />
-        <NewRoomForm createRoom={this.createRoom} />
-        </aside>
-        <section className="chatListContainer">
-          <ul>
-            { this.state.messages } 
-          </ul>
-        </section>
-      </div>
-      {/* 
-        // <div id="center">
-        //     <div id="chat-output">
-        //     { this.state.messages }     
-        //     </div>      */}
-        <div className="form-container">
-            <form id="chat-form"
-                value={ this.state.chatInput } 
-               onSubmit={this.onSubmit}>                    
-                <input id="chat-input"
-                    type="text"
-                    placeholder='Type message...'
-                    name=""
+      <div className="container">
+        
+          <MenuContainer currentUser={this.state.currentUser}
+                        users={this.state.currentRoom.users}
+                        subscribeToRoom={this.subscribeToRoom}
+                        currentRoom={this.state.currentRoom}
+                        rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
+                        roomId={this.state.roomId}
+                        createRoom={this.createRoom}
+           />
+          
+            <ul className="messages">
+              { this.state.messages } 
+              
+            </ul>
+            <TypingIndicator typingUsers={this.state.typingUsers} />
+          
+          
+                <form id="chat-form"
+                className="composer-container"
                     value={ this.state.chatInput } 
-                    // onChange={ this.setChatInput } 
-                    onChange={ this.sendTypingEvent } 
-                    // onKeyPress={ this._handleKeyPress }
-                    />                 
-                <div id="btndiv">
-                <input id="button" type="button"
-                    onClick={ this._onClick} value="Send Chat" />
-                <TypingIndicator typingUsers={this.state.typingUsers} />
-                </div> 
-            </form>  
-          </div>                          
-        </div>
+                  onSubmit={this.onSubmit}
+                  >                    
+                    <input 
+                    // id="chat-input"
+                        type="text"
+                        className="composer"
+                        placeholder='Type message...'
+                        name=""
+                        value={ this.state.chatInput } 
+                        // onChange={ this.setChatInput }
+                        autoFocus={true} 
+                        onChange={ this.sendTypingEvent } 
+                        
+                        // onKeyPress={ this._handleKeyPress }
+                        />                 
+                    {/* <div id="btndiv"> */}
+                    {/* <input id="button" type="button"
+                        onClick={ this._onClick} value="Send Chat"
+                         /> */}
+                    {/* <TypingIndicator typingUsers={this.state.typingUsers} /> */}
+                    {/* </div>  */}
+                </form>  
+                                       
+    
+      </div>
       ); 
     }
 
