@@ -17,17 +17,17 @@ import React, { Component } from 'react'
     }
     render() {
         return (
-        <div>
-            <div>
-            <h2>What is your username?</h2>
-            <form onSubmit={this.onSubmit}>
-                <input
-                type="text"
-                placeholder="Your full name"
-                onChange={this.onChange}
-                />
-                <input type="submit" />
-            </form>
+        <div className="container welcome-section">
+            <div className="wrapper">
+                <h2 className="login-header">What is your username?</h2>
+                <form onSubmit={this.onSubmit}>
+                    <input
+                    type="text"
+                    placeholder="Your full name"
+                    onChange={this.onChange}
+                    />
+                    <input type="submit" />
+                </form>
             </div>
         </div>
         )
