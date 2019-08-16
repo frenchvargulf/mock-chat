@@ -12,7 +12,7 @@ class App extends Component {
     this.onUsernameSubmitted = this.onUsernameSubmitted.bind(this)
   }
   onUsernameSubmitted(username) {
-    fetch('http://localhost:3000/users', {
+    fetch('/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

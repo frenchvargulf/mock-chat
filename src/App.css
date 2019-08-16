@@ -4,80 +4,76 @@ body{
   box-sizing: border-box;
 }
 
-#root {
-  width: 100%;
-  max-height: 100vh;
-}
-
-.chat-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.chatwrapper {
-  display: flex;
-  flex: 1;
-}
-
-.whosOnlineListContainer {
-  width: 300px;
-  /* flex: none; */
-  padding: 20;
-  background-color: dodgerblue;
-  color: white;
-}
-
-.chatListContainer {
-  overflow-Y: scroll;
-  overflow-X: none;
-  padding: 20;
-  width: 85%;
-  display: flex;
-  flex-direction: column;
-  height: 85vh;
-}
-
 .container {
-  overflow-Y: scroll;
-  flex: 1,
-}
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  height: 100vh;
+  position: relative;
+  background-color: #EEE;
+} 
 
-ul {
-  list-style-type: none;
-};
-
-li {
-  margin-top: 50px;
-  margin-bottom: 50px;
-  display: inline-block;
-}
-
-.senderUsername {
-  font-weight: 700;
-  padding: 5px 0;
-}
-
-.message {
-  font-size: 15px;
-  display: inline;
-  padding: 5px;
-  background-color: dodgerblue;
-  border-radius: 10%;
-}
-.form-container {
-  padding: 20;
-  border-top: 1px #4C758F solid;
-  margin-bottom: 20;
-}
-#chat-form {
-  display: flex,
-}
-input {
-  color: inherit;
-  background: none;
+#roundButton {
+  background-color: #96D9FF;
+  margin-bottom: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 10px solid #0065A6;
   outline: none;
+  transition: all .2s cubic-bezier(0, 1.26, .8, 1.28);
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 10px;
+}
+ 
+#roundButton:hover {
+  background-color: #96D9FF;
+  cursor: pointer;
+  border-color: #003557;
+  transform: scale(1.2, 1.2);
+}
+
+.composer-container {
+  max-width: 100%;
+  display: flex;
+  padding: 1em;
+  background-color: #fbfbfb;
+}
+
+.composer {
+  background-color: #fbfbfb;
+  /* height: 100%;*/
+  width: 100%; 
   border: none;
-  flex: 1;
-  font-size: 16px;
-  
+  outline: none;
+  font-size: 1.25em;
+  resize: none;
+}
+
+.messages {
+  padding-left: 0;
+  margin-left: 0;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  width: 1000px;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-y: scroll;
+}
+
+.text-area {
+  max-width: 100%;
+  background-color: #fbfbfb;
+  height: 10vh;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px){
+  .messages{
+    padding-top: 70px;
+  }
 }
