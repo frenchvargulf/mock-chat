@@ -18,3 +18,24 @@ ul {
     text-decoration: none;
     color: black;
 }
+
+.new-room-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.room-input {
+    padding: 20px;
+    outline: none;
+    border: none;
+}
+
+#create-room-btn {
+    padding: 20px;
+    outline: none;
+    border: none;
+    background-color: dodgerblue;
+}
