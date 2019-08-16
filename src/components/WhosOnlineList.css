@@ -1,0 +1,14 @@
+.online-title {
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+}
+
+.room-title {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+ul{
+    list-style: none;
+}
