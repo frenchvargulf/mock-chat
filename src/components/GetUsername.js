@@ -19,7 +19,7 @@ import React, { Component } from 'react'
         return (
         <div className="container welcome-section">
             <div className="wrapper">
-                <h2 className="login-header">What is your username?</h2>
+                <h2 className="login-header">Please insert User</h2>
                 <form onSubmit={this.onSubmit}>
                     <input
                     type="text"
