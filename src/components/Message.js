@@ -1,18 +1,27 @@
-// src/components/Message.js
-
 import React, { Component } from 'react'
+import './Message.css'
+
 class Message extends Component{
     render () {
-        console.log(this)
+        console.log(this.props)
+        // let time = new Date(this.props.timestamp);
+
         return ( 
-            <li key={this.props.id}>
-                <div className="senderUsername"> 
-                    { this.props.senderId }
-                </div>
-                <div className="message">
-                    { this.props.text } 
-                </div>
-            </li>
+            <div>
+                <li key={this.props.id} className="Message">
+                    <p > 
+                        { this.props.senderId }
+                    </p>
+                    <p >
+                        { this.props.text } 
+                    </p>
+                    
+                </li>
+                {/* <span className="timestamp">
+                    {time.getHours() + ':' + time.getMinutes() + ":" + time.getSeconds() }
+                </span> */}
+            </div>
+            
         );
     }
 };
