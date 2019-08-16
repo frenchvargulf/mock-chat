@@ -7,8 +7,14 @@
 .room-title {
     text-transform: uppercase;
     font-weight: 700;
+    text-align: center;
 }
 
-ul{
+ul {
     list-style: none;
+}
+
+.rooms-list a {
+    text-decoration: none;
+    color: black;
 }
