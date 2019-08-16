@@ -14,16 +14,14 @@ class MenuContainer extends Component {
   }
   handleMouseDown(e) {
     this.toggleMenu();
- 
-    console.log("clicked");
     e.stopPropagation();
   }
+  // Issue when clicking the create room 
    
   toggleMenu() {
     this.setState({
         visible: !this.state.visible
     });
-    console.log("toggle")
   }
 
   render() {
