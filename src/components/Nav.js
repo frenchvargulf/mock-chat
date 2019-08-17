@@ -9,14 +9,11 @@ class MenuContainer extends Component {
     this.state = {
       visible: false,
     };
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.toggleMenu = this.toggleMenu.bind(this);
   }
   handleMouseDown(e) {
     this.toggleMenu();
     e.stopPropagation();
   }
-  // Issue when clicking the create room 
    
   toggleMenu() {
     this.setState({
@@ -27,15 +24,18 @@ class MenuContainer extends Component {
   render() {
     return (
       <>
-        <MenuButton handleMouseDown={this.handleMouseDown}/>
-          <Menu handleMouseDown={this.handleMouseDown}
+        {/* <MenuButton handleMouseDown={e => this.handleMouseDown(e)}/> */}
+        <div className="menu">
+          <Menu 
+          // handleMouseDown={e => this.handleMouseDown}
             menuVisibility={this.state.visible} 
             currentUser={this.props.currentUser}
             currentRoom={this.props.currentRoom}
             users={this.props.currentRoom.users}
-            subscribeToRoom={this.subscribeToRoom}
+            subscribeToRoom={this.props.subscribeToRoom}
             rooms={this.props.rooms}
-            createRoom={this.createRoom}/>
+            createRoom={this.props.createRoom}/>
+            </div>
       </>
     );
   }
