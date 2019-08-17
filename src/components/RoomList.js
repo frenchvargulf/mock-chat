@@ -6,7 +6,7 @@ class RoomList extends React.Component {
         const orderedRooms = [...this.props.rooms].sort((a, b) => a.id > b.id)
         return (
             <div className="rooms-list">
-                <h3 className="room-title">Your rooms</h3>
+                <h3 className="room-title">Channels</h3>
                 <ul>
                         {orderedRooms.map(room => {
                             const active = room.id === this.props.roomId ? 'active' : '';
@@ -14,7 +14,7 @@ class RoomList extends React.Component {
                                 <li key={room.id} className={"room " + active}>
                                     <a
                                         onClick={() => this.props.subscribeToRoom(room.id)}
-                                        href="#">
+                                        href="/">
                                         # {room.name}
                                     </a>
                                 </li>
