@@ -5,7 +5,7 @@ class WhosOnlineList extends Component {
   renderUsers() {
     return (
       <div>
-        <h3 className="online-title">Active Users</h3>
+        <h3 className="online-title">Users Online</h3>
         <ul>
           {this.props.users.map((user, index) => {
             if (user.id === this.props.currentUser.id) {

@@ -16,10 +16,10 @@ ul {
 
 .rooms-list a {
     text-decoration: none;
-    color: black;
+    color: white;
 }
 
-.new-room-form {
+.new-room-form-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,10 +27,21 @@ ul {
     width: 100%;
 }
 
+.new-room-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .room-input {
-    padding: 20px;
+    padding: 20px 0;
     outline: none;
     border: none;
+    width: 100%;
+    background-color: #3F0E40;
+    opacity: 90%;
+    color: dodgerblue;
 }
 
 #create-room-btn {
