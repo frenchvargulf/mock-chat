@@ -22,10 +22,10 @@ class Menu extends Component {
                     className="whosOnlineListContainer"
             />
             <RoomList
-                        subscribeToRoom={this.subscribeToRoom}
+                        subscribeToRoom={this.props.subscribeToRoom}
                             rooms={this.props.rooms}
                         roomId={this.props.roomId} />
-            <NewRoomForm createRoom={this.createRoom} />
+            <NewRoomForm createRoom={this.props.createRoom} roomId={this.props.roomId} currentUser={this.props.currentUser} />
       </div>
     );
   }
