@@ -4,6 +4,7 @@ import Chatkit from '@pusher/chatkit-client';
 import Message from './Message';
 import TypingIndicator from './TypingIndicator';
 import MenuContainer from './Nav';
+import MenuSwiper from './Swipe'
 
 class Chat extends Component {  
   constructor(props){
@@ -168,24 +169,30 @@ class Chat extends Component {
   render() {
     return ( 
       <div className="container">
-        
-          <MenuContainer currentUser={this.state.currentUser}
-                        users={this.state.currentRoom.users}
-                        subscribeToRoom={this.subscribeToRoom}
-                        currentRoom={this.state.currentRoom}
-                        rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
-                        roomId={this.state.roomId}
-                        createRoom={this.createRoom}
-           />
-          
+
+        <div className="menu-container">
+
+            <MenuContainer currentUser={this.state.currentUser}
+                            users={this.state.currentRoom.users}
+                            subscribeToRoom={this.subscribeToRoom}
+                            currentRoom={this.state.currentRoom}
+                            rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
+                            roomId={this.state.roomId}
+                            createRoom={this.createRoom}
+              />
+
+        </div>
+
+        <div className="messanger-container">
+
+          <div className="wrapper">
+
             <ul className="messages">
-              { this.state.messages } 
-              
+                  { this.state.messages } 
             </ul>
-            <TypingIndicator typingUsers={this.state.typingUsers} />
-          
-          
-                <form id="chat-form"
+            {/* <TypingIndicator typingUsers={this.state.typingUsers} /> */}
+            
+            <form id="chat-form"
                 className="composer-container"
                     value={ this.state.chatInput } 
                   onSubmit={this.onSubmit}
@@ -209,9 +216,15 @@ class Chat extends Component {
                          /> */}
                     {/* <TypingIndicator typingUsers={this.state.typingUsers} /> */}
                     {/* </div>  */}
-                </form>  
-                                       
-    
+                </form>                        
+          
+          </div>
+
+        </div>
+        
+         
+          
+           
       </div>
       ); 
     }
