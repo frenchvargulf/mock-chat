@@ -9,7 +9,6 @@ class App extends Component {
       currentUsername: '',
       visibleScreen: "getUsernameScreen"
     }
-    this.onUsernameSubmitted = this.onUsernameSubmitted.bind(this)
   }
   onUsernameSubmitted(username) {
     fetch('/users', {
@@ -30,7 +29,7 @@ class App extends Component {
   }
   render() {
       if (this.state.visibleScreen === 'getUsernameScreen') {
-        return <GetUsername onSubmit={this.onUsernameSubmitted} />
+        return <GetUsername onSubmit={(e) => this.onUsernameSubmitted(e)} />
       }
       if (this.state.visibleScreen === 'Chat') {
         return <Chat currentUsername={this.state.currentUsername} />
