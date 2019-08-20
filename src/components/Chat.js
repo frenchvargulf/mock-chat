@@ -4,7 +4,7 @@ import Chatkit from '@pusher/chatkit-client';
 import Message from './Message';
 import TypingIndicator from './TypingIndicator';
 import MenuContainer from './Nav';
-import MenuSwiper from './Swipe'
+import Canvas from "./components"
 
 class Chat extends Component {  
   constructor(props){
@@ -12,51 +12,48 @@ class Chat extends Component {
     this.state = {
       messages: [],
       currentRoom: {},
+      roomId: "1704c5a5-539b-4aa6-9c12-2d5417148a1e",
       currentUser: {},
       typingUsers: [],
       chatInput: "",
       joinableRooms: [],
       joinedRooms: [],
-    }        
-    // this.setChatInput = this.setChatInput.bind(this);
-    this.state.currentUser.sendMessage = this.sendMessage.bind(this);
-    // this._handleKeyPress = this._handleKeyPress.bind(this);
-    // this._onClick = this._onClick.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.sendTypingEvent = this.sendTypingEvent.bind(this);
-
-    this.subscribeToRoom = this.subscribeToRoom.bind(this)
+      newMessage: [],
+      paint: false,
+      rooms: [],
+    }  
+    this.state.currentUser.sendMessage = this.sendMessage.bind(this);      
     this.getRooms = this.getRooms.bind(this)
-    this.createRoom = this.createRoom.bind(this)
+
   }      
-  // update the input field when the user types something
-  // setChatInput(event){
-  //   this.setState({
-  //     chatInput: event.target.value,
-  //     timestamp: event.target.timestamp,
-  //   }); 
-  // }   
   
   sendMessage(currentUser) {
     if(this.state.chatInput){
       currentUser.sendMessage({
         text: this.state.chatInput,
-        roomId: "3acefd1b-2452-495f-bb56-91880b939c84",
+        roomId: this.state.currentRoom.id,
       })
     }  
-    this.setState({ chatInput: ""})          
+    this.setState({ 
+        chatInput: "",
+        newMessage: "",
+    })          
   }       
-  // _handleKeyPress(e){
-  //         if (e.key === 'Enter') {
-  //             console.log(this)
-  //             this.state.currentUser.sendMessage();
-  //         }
-  //     }    
-  
-  // _onClick(e){
-  //   this.sendMessage(this.state.currentUser)
-    
-  // }  
+
+  handleClick(){
+    console.log(this.state.paint)
+    if ( !this.state.paint ){
+        this.setState({
+            paint: true,
+        })
+    } else {
+        this.setState({
+            paint: false,
+        })
+    }
+
+} 
+
 
   onSubmit(e){
     e.preventDefault();
@@ -66,7 +63,7 @@ class Chat extends Component {
   sendTypingEvent(event) {
     console.log("Event typing")
     this.state.currentUser
-      .isTypingIn({ roomId: "3acefd1b-2452-495f-bb56-91880b939c84", })
+      .isTypingIn({ roomId: this.state.roomId, })
       .catch(error => console.error('error', error))
       this.setState({
         chatInput: event.target.value
@@ -85,49 +82,15 @@ class Chat extends Component {
   }
 
   subscribeToRoom(roomId) {
-    this.setState({ messages: [] })
-    this.state.currentUser.subscribeToRoom({
-        roomId: roomId,
-        hooks: {
-            onNewMessage: message => {
-                this.setState({
-                    messages: [...this.state.messages, message]
-                })
-            }
-        }
-    })
-    .then(room => {
-        this.setState({
-            roomId: room.id
-        })
-        this.getRooms()
-    })
-    .catch(err => console.log('error on subscribing to room: ', err))
-  }
+      const {currentUser, currentRoom} = this.state;
+      console.log(`Subskyrbuję to ${roomId}`)
 
-  createRoom(name) {
-    this.state.currentUser.createRoom({
-        name
-    })
-    .then(room => this.subscribeToRoom(room.id))
-    .catch(err => console.log('error with createRoom: ', err))
-  }
-
-  componentDidMount() {
-    const chatManager = new Chatkit.ChatManager({
-      instanceLocator: 'v1:us1:71daff79-bcec-48e1-90fc-3fb8d9816fd5',
-      userId: this.props.currentUsername,
-      tokenProvider: new Chatkit.TokenProvider({
-      url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/71daff79-bcec-48e1-90fc-3fb8d9816fd5/token',
-      }),
-    })
-    chatManager
-      .connect()
-      .then(currentUser => {
-        this.setState({ currentUser })
-        this.getRooms()
-        return currentUser.subscribeToRoom({
-          roomId: "3acefd1b-2452-495f-bb56-91880b939c84",
+      this.setState({
+          messages: [],
+          
+      })
+      return currentUser.subscribeToRoom({
+          roomId: roomId,
           messageLimit: 100,
           hooks: {
             onMessage: message => {
@@ -157,74 +120,157 @@ class Chat extends Component {
               })
             },
             onPresenceChange: () => this.forceUpdate(),
+            
+
+          
           },
-        })
-      })      
+        })   
       .then(currentRoom => {
         this.setState({ currentRoom })
+        console.log(currentRoom)
       })
+      .catch(error => console.error('error', error))
+  }
+
+  sendDM(ids){
+    console.log(this.state.currentUser)
+    console.log(ids)
+    const rooms = [this.state.currentUser.rooms]
+    console.log(Array.from(rooms))
+    const roomName = `${this.state.currentUser.id}_${ids.id}`;
+    console.log(roomName)
+
+    const isPrivateChatCreated = this.state.currentUser.rooms.filter( (room) => {
+      console.log(room)
+      if (room.customData && room.customData.isDirectMessage) {
+        
+            const arr = [this.state.currentUser.id, ids.id];
+            console.log(arr)
+            const { userIds } = room.customData;
+      
+            if (arr.sort().join('') === userIds.sort().join('')) {
+              console.log(arr.sort().join(""), userIds.sort().join(""))
+              return {
+                room,
+              };
+            }
+          }
+        
+    });
+    
+    console.log(isPrivateChatCreated)
+    if (isPrivateChatCreated.length > 0) {
+        console.log(isPrivateChatCreated)
+        const room = isPrivateChatCreated[0];
+        console.log(room)
+        this.getRooms()
+        return Promise.resolve(room);
+    } else {
+      this.state.currentUser.createRoom({
+          name: roomName,
+          private: true,
+          addUserIds: [ids.id],
+          userIds: [this.state.currentUser.id, ids.id],
+          users: [this.state.currentUser.id, ids.id],
+          customData: {
+            isDirectMessage: true,
+            userIds: [this.state.currentUser.id, ids.id],
+          },
+      })
+      .then(room => this.subscribeToRoom(room.id))
+      .then(room => ids.subscribeToRoom(room.id))
+      .then(this.getRooms())
+      .catch(err => console.log('error with createRoom: ', err))
+    }
+  }
+
+  componentWillUnmount(){
+    return Promise.resolve();
+  }
+
+
+  createRoom(name) {
+    this.state.currentUser.createRoom({
+        name,
+        addUserIds: [ ...(this.state.currentUser.users.map( (user) =>{
+          console.log(user.id);
+          return user.id;
+        }) ) ],
+        customData: {
+          isDirectMessage: false,
+        },
+    })
+    .then(room => this.subscribeToRoom(room.id))
+    .then(this.getRooms())
+    .catch(err => console.lo2g('error with createRoom: ', err))
+  }
+
+  componentDidMount() {
+    const chatManager = new Chatkit.ChatManager({
+      instanceLocator: 'v1:us1:301e1216-59fa-432c-bc17-165703f44329',
+      userId: this.props.currentUsername,
+      tokenProvider: new Chatkit.TokenProvider({
+      url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/301e1216-59fa-432c-bc17-165703f44329/token',
+      }),
+    })
+    chatManager
+      .connect()
+      .then(currentUser => {
+        this.setState({ currentUser})
+        this.getRooms()
+        this.subscribeToRoom( this.state.roomId )
+      })      
       .catch(error => console.error('error', error))
   }   
 
   render() {
+    const {currentUser, currentRoom, joinableRooms, joinedRooms, roomId, paint, typingUsers, messages, chatInput} = this.state
     return ( 
       <div className="container">
-
-        <div className="menu-container">
-
-            <MenuContainer currentUser={this.state.currentUser}
-                            users={this.state.currentRoom.users}
-                            subscribeToRoom={this.subscribeToRoom}
-                            currentRoom={this.state.currentRoom}
-                            rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
-                            roomId={this.state.roomId}
-                            createRoom={this.createRoom}
-              />
-
+        <div className="sidebar-container">
+            <MenuContainer currentUser={currentUser}
+                            users={currentRoom.users}
+                            subscribeToRoom={ (e) => this.subscribeToRoom(e)}
+                            currentRoom={currentRoom}
+                            rooms={[...joinableRooms, ...joinedRooms]}
+                            roomId={roomId}
+                            createRoom={ (e) => this.createRoom(e)}
+                            handleClick={  (e) => this.handleClick(e)}
+                            sendDM={ (e) => this.sendDM(e)}
+            />
         </div>
-
         <div className="messanger-container">
-
           <div className="wrapper">
-
-            <ul className="messages">
-                  { this.state.messages } 
-            </ul>
-            {/* <TypingIndicator typingUsers={this.state.typingUsers} /> */}
-            
-            <form id="chat-form"
-                className="composer-container"
-                    value={ this.state.chatInput } 
-                  onSubmit={this.onSubmit}
-                  >                    
-                    <input 
-                    // id="chat-input"
-                        type="text"
-                        className="composer"
-                        placeholder='Type message...'
-                        name=""
-                        value={ this.state.chatInput } 
-                        // onChange={ this.setChatInput }
-                        autoFocus={true} 
-                        onChange={ this.sendTypingEvent } 
-                        
-                        // onKeyPress={ this._handleKeyPress }
-                        />                 
-                    {/* <div id="btndiv"> */}
-                    {/* <input id="button" type="button"
-                        onClick={ this._onClick} value="Send Chat"
-                         /> */}
-                    {/* <TypingIndicator typingUsers={this.state.typingUsers} /> */}
-                    {/* </div>  */}
-                </form>                        
-          
+           {(paint === true)? 
+            (
+              <Canvas currentUser={currentUser} />
+            ) : (
+                    <>
+                        <ul className="messages">
+                            { messages } 
+                        </ul>
+                        <TypingIndicator typingUsers={typingUsers} /> 
+                        <form id="chat-form"
+                          className="composer-container"
+                          value={ chatInput } 
+                          onSubmit={ (e) => this.onSubmit(e)}
+                        >                    
+                        <input 
+                               type="text"
+                               className="composer"
+                               placeholder='Type message...'
+                               name=""
+                               value={ chatInput } 
+                               autoFocus={true} 
+                               onChange={ e => this.sendTypingEvent(e) } 
+                               />                 
+                       </form>               
+                    </>  
+                )
+            }
           </div>
-
         </div>
-        
-         
-          
-           
+
       </div>
       ); 
     }
