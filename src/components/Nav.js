@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import MenuButton from './MenuButton'
 import Menu from './Menu'
 import './Menu.css'
+
+
  
 class MenuContainer extends Component {
   constructor(props){
@@ -11,6 +13,7 @@ class MenuContainer extends Component {
     };
   }
   handleMouseDown(e) {
+    console.log("fafaf")
     this.toggleMenu();
     e.stopPropagation();
   }
@@ -22,21 +25,27 @@ class MenuContainer extends Component {
   }
 
   render() {
+    console.log(this.props.currentRoom.userIds)
     return (
-      <>
+      <div className="menu-container">
         {/* <MenuButton handleMouseDown={e => this.handleMouseDown(e)}/> */}
-        <div className="menu">
+        
           <Menu 
           // handleMouseDown={e => this.handleMouseDown}
             menuVisibility={this.state.visible} 
             currentUser={this.props.currentUser}
             currentRoom={this.props.currentRoom}
+            // roomId={this.props.roomId}
             users={this.props.currentRoom.users}
             subscribeToRoom={this.props.subscribeToRoom}
             rooms={this.props.rooms}
-            createRoom={this.props.createRoom}/>
-            </div>
-      </>
+            createRoom={this.props.createRoom}
+            handleClick={this.props.handleClick}
+            sendDM={this.props.sendDM}/>
+
+
+        
+      </div>
     );
   }
 }
