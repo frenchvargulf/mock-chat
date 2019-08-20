@@ -3,9 +3,6 @@ import './Message.css'
 
 class Message extends Component{
     render () {
-        console.log(this.props)
-        // let time = new Date(this.props.timestamp);
-
         return ( 
             <div>
                 <li key={this.props.id} className="Message">
@@ -15,13 +12,8 @@ class Message extends Component{
                     <p >
                         { this.props.text } 
                     </p>
-                    
                 </li>
-                {/* <span className="timestamp">
-                    {time.getHours() + ':' + time.getMinutes() + ":" + time.getSeconds() }
-                </span> */}
             </div>
-            
         );
     }
 };

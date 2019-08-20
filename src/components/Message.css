@@ -1,6 +1,5 @@
 
   .Message {
-   max-width: 100%;
    min-height: 50px;
    margin: .5em;
    padding: .5em;
@@ -13,6 +12,6 @@
   }
   .Message p {
     flex-grow: 1;
-    margin: 1em 3em;
+    margin: 1em 3em; 
   }
   
