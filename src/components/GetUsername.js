@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import "./GetUsername.css"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
     class GetUsername extends Component {
      constructor(props) {
        super(props)
@@ -17,7 +20,7 @@ import React, { Component } from 'react'
     }
     render() {
         return (
-        <div className="container welcome-section">
+        <div className="welcome-section">
             <div className="wrapper">
                 <h2 className="login-header">Please insert User</h2>
                 <form onSubmit={this.onSubmit}>
@@ -26,7 +29,8 @@ import React, { Component } from 'react'
                     placeholder="Your full name"
                     onChange={this.onChange}
                     />
-                    <input type="submit" />
+                    <button type="submit">+
+                    </button>
                 </form>
             </div>
         </div>
