@@ -1,18 +1,38 @@
+require('dotenv').config();
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const Chatkit = require('@pusher/chatkit-server')
 const app = express()
+const Pusher = require('pusher');
+
+const port = process.env.PORT || 4000;
+const pusher = new Pusher({
+  appId: "842937",
+  key: "4f21d161f02e7ab3f286",
+  secret: "6b5b7d50766b4ee0a90c",
+  cluster: "eu",
+});
 
 // Init chatkit instance
 const chatkit = new Chatkit.default({
-  instanceLocator: `v1:us1:71daff79-bcec-48e1-90fc-3fb8d9816fd5`,
-  key: '7e6fce75-7be9-44c8-8c1c-840b2ec73c6a:GBn+YUQIR2X0jYMx9MdAb2hS+5fvi+TKRVshxd/RRQ4=',
+  instanceLocator: `v1:us1:301e1216-59fa-432c-bc17-165703f44329`,
+  key: 'd952671c-e492-4193-9508-8ff1fcd00efb:2FgBLt47367hcyz0nj8R7HvDWvSKa6jZ+9g5gWQ4UN4=',
 })
 
-app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
+
 
 // Post methord to create users
 app.post('/users', (req, res) => {
@@ -33,11 +53,12 @@ app.post('/users', (req, res) => {
     })
 })
 
-const PORT = 3000
-app.listen(PORT, err => {
-  if (err) {
-    console.error(err)
-  } else {
-    console.log(`Running on port ${PORT}`)
-  }
-})
+app.post('/paint', (req, res) => {
+  pusher.trigger('painting', 'draw', req.body)
+  res.json(req.body);
+});
+
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
+
