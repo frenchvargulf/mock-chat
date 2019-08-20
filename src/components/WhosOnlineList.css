@@ -2,6 +2,8 @@
     text-transform: uppercase;
     font-weight: 700;
     text-align: center;
+    margin: 0;
+    padding: 20px 0;
 }
 
 .room-title {
@@ -14,6 +16,20 @@ ul {
     list-style: none;
 }
 
+
+.send-dm-btn{
+    opacity: 0.8;
+    color: dodgerblue;
+    display: block;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 20px;
+    cursor: pointer;
+    
+}
 .rooms-list a {
     text-decoration: none;
     color: white;
@@ -44,9 +60,9 @@ ul {
     color: dodgerblue;
 }
 
-#create-room-btn {
+/* #create-room-btn {
     padding: 20px;
     outline: none;
     border: none;
     background-color: dodgerblue;
-}
+} */

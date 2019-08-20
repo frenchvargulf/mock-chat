@@ -5,19 +5,23 @@ class WhosOnlineList extends Component {
   renderUsers() {
     return (
       <div>
-        <h3 className="online-title">Users Online</h3>
+        <p className="online-title">Users Online</p>
         <ul>
           {this.props.users.map((user, index) => {
             if (user.id === this.props.currentUser.id) {
               return (
                 <WhosOnlineListItem key={index} presenceState="online">
-                  {user.name} (You)
+                  {user.name} (You) 
                 </WhosOnlineListItem>
               )
             }
             return (
               <WhosOnlineListItem key={index} presenceState={user.presence.state}>
                 {user.name}
+                {console.log(user)} 
+                <div 
+                 className="send-dm-btn" onClick={(e) => this.props.sendDM(user)}
+                >+</div>
               </WhosOnlineListItem>
             )
           })}
