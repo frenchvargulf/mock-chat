@@ -12,7 +12,7 @@ class Chat extends Component {
     this.state = {
       messages: [],
       currentRoom: {},
-      roomId: "1704c5a5-539b-4aa6-9c12-2d5417148a1e",
+      roomId: "11abd904-2e78-4393-9b1d-5eaa276adeb2",
       currentUser: {},
       typingUsers: [],
       chatInput: "",
@@ -41,7 +41,6 @@ class Chat extends Component {
   }       
 
   handleClick(){
-    console.log(this.state.paint)
     if ( !this.state.paint ){
         this.setState({
             paint: true,
@@ -61,7 +60,6 @@ class Chat extends Component {
   }   
 
   sendTypingEvent(event) {
-    console.log("Event typing")
     this.state.currentUser
       .isTypingIn({ roomId: this.state.roomId, })
       .catch(error => console.error('error', error))
@@ -83,7 +81,7 @@ class Chat extends Component {
 
   subscribeToRoom(roomId) {
       const {currentUser, currentRoom} = this.state;
-      console.log(`Subskyrbuję to ${roomId}`)
+      // console.log(`Subskyrbuję to ${roomId}`)
 
       this.setState({
           messages: [],
@@ -127,29 +125,26 @@ class Chat extends Component {
         })   
       .then(currentRoom => {
         this.setState({ currentRoom })
-        console.log(currentRoom)
       })
+      .then( this.getRooms())
       .catch(error => console.error('error', error))
   }
 
+  handleMouseDown(){
+
+  }
+
   sendDM(ids){
-    console.log(this.state.currentUser)
-    console.log(ids)
     const rooms = [this.state.currentUser.rooms]
-    console.log(Array.from(rooms))
     const roomName = `${this.state.currentUser.id}_${ids.id}`;
-    console.log(roomName)
 
     const isPrivateChatCreated = this.state.currentUser.rooms.filter( (room) => {
-      console.log(room)
       if (room.customData && room.customData.isDirectMessage) {
         
             const arr = [this.state.currentUser.id, ids.id];
-            console.log(arr)
             const { userIds } = room.customData;
       
             if (arr.sort().join('') === userIds.sort().join('')) {
-              console.log(arr.sort().join(""), userIds.sort().join(""))
               return {
                 room,
               };
@@ -158,11 +153,8 @@ class Chat extends Component {
         
     });
     
-    console.log(isPrivateChatCreated)
     if (isPrivateChatCreated.length > 0) {
-        console.log(isPrivateChatCreated)
         const room = isPrivateChatCreated[0];
-        console.log(room)
         this.getRooms()
         return Promise.resolve(room);
     } else {
@@ -193,7 +185,6 @@ class Chat extends Component {
     this.state.currentUser.createRoom({
         name,
         addUserIds: [ ...(this.state.currentUser.users.map( (user) =>{
-          console.log(user.id);
           return user.id;
         }) ) ],
         customData: {
@@ -237,6 +228,7 @@ class Chat extends Component {
                             createRoom={ (e) => this.createRoom(e)}
                             handleClick={  (e) => this.handleClick(e)}
                             sendDM={ (e) => this.sendDM(e)}
+                            handleMouseDown={ (e) => this.handleMouseDown(e) } 
             />
         </div>
         <div className="messanger-container">

@@ -3,6 +3,7 @@ import "./Menu.css";
 import WhosOnlineList from './WhosOnlineList';
 import RoomList from './RoomList';
 import NewRoomForm from './NewRoom';
+import './WhosOnlineList.css';
 import Canvas from './components';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -12,14 +13,11 @@ class Paint extends Component {
   render(){
     return (
       <div>
-        <h3 style={{ textAlign: 'center' }}>Painting Space</h3>
+        <h3 className="online-title">Painting Space</h3>
         <div className="main">
           <div className="color-guide">
-          <button onClick={this.props.handleClick}>Switch</button>
-            <h5>Color Guide</h5>
-            <div className="user user"></div>
-            <div className="user guest"></div>
-          </div>
+          <button onClick={this.props.handleClick} className="switch-button">Switch</button>
+        </div>
           
         </div>
       </div>
