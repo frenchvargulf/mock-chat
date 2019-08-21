@@ -3,7 +3,7 @@
     font-weight: 700;
     text-align: center;
     margin: 0;
-    padding: 20px 0;
+    padding: 20px 0 0 0;
 }
 
 .room-title {
@@ -17,7 +17,7 @@ ul {
 }
 
 
-.send-dm-btn{
+.send-dm-btn {
     opacity: 0.8;
     color: dodgerblue;
     display: block;
@@ -60,6 +60,23 @@ ul {
     color: dodgerblue;
 }
 
+.switch-button {
+    width: 100%;
+    outline: none;
+    border: none;
+    color: rgb(11, 25, 42);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 25px;
+    background-color: rgb(143, 117, 144);
+    opacity: 0.5;
+    padding: 10px;
+
+}
+
+.switch-button:hover{
+    color: #fff;
+}
 /* #create-room-btn {
     padding: 20px;
     outline: none;
