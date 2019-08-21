@@ -14,6 +14,9 @@ Boostrapped with creare-react-app.
 
 ## Functionalities: 
 1. user authentication ( please use User to log in)
+
+<img src="./login.png" width="300px" height="150px">
+
 2. fetching info: users, messages
 3. sending messages
 4. display channels
@@ -21,6 +24,8 @@ Boostrapped with creare-react-app.
 6. display online users
 7. display users when typing
 8. private rooms - sending Direct Messages 
+
+<img src="./main-view.png" width="300px" height="150px">
 
 Many more to come including translations, which I am particulary excited about. 
 
