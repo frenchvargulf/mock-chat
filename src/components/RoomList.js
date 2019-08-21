@@ -26,7 +26,6 @@ class RoomList extends React.Component {
                 <h3 className="room-title">Channels</h3>
                 <ul>
                         {orderedRooms.map(room => {
-                            console.log(room)
                             if (!room.isPrivate){
                                 return ( <RoomLink key={room.id} room={room} subscribeToRoom={this.props.subscribeToRoom} />)
                             } else {
@@ -39,7 +38,6 @@ class RoomList extends React.Component {
                 <h3 className="room-title">Direct Messages</h3>
                 <ul>
                         {orderedRooms.map(room => {
-                            console.log(room)
                             if (room.isPrivate){
                                 return ( <RoomLink key={room.id} room={room} subscribeToRoom={this.props.subscribeToRoom} />)
                             } else {
