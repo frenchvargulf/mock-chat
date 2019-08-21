@@ -46,4 +46,4 @@ Please make sure you have CORS extension installed on your browser, although the
 
 For full compatibilty please use Chrome.
 
-<a href="harsh-geese.surge.sh">PREVIEW THE APP</a>
+<a href="https://harsh-geese.surge.sh">PREVIEW THE APP</a>
