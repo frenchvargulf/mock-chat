@@ -8,8 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
        this.state = {
          username: '',
        }
-       this.onSubmit = this.onSubmit.bind(this)
-       this.onChange = this.onChange.bind(this)
     }
     onSubmit(e) {
         e.preventDefault()
@@ -22,15 +20,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
         return (
         <div className="welcome-section">
             <div className="wrapper">
-                <h2 className="login-header">Please insert User</h2>
-                <form onSubmit={this.onSubmit}>
+                <h2 className="login-header">Login</h2>
+                <h3 className="login-instructions">Please insert User</h3>
+                <form onSubmit={ (e) => this.onSubmit(e) }>
                     <input
                     type="text"
                     placeholder="Your full name"
-                    onChange={this.onChange}
+                    onChange={ (e) => this.onChange(e)}
                     />
-                    <button type="submit">+
-                    </button>
                 </form>
             </div>
         </div>

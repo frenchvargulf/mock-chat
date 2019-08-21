@@ -19,7 +19,6 @@ class App extends Component {
       body: JSON.stringify({ username }),
     })
     .then(response => {
-      console.log(response)
       this.setState({
         currentUsername: username,
         visibleScreen: 'Chat'
