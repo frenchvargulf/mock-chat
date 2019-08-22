@@ -103,7 +103,23 @@ class Chat extends Component {
                                                     
                                                     text={ message.text 
                                                     }/>)         
-                            this.setState({messages: newMessages})
+                            this.setState({messages: newMessages});
+
+                            if (currentRoom === null) return;
+
+                            return currentUser.setReadCursor({
+                              roomId: roomId,
+                              position: message.id,
+                            });
+
+            },
+            onRoomUpdated: room => {
+              const { rooms } = this.state;
+              const index = rooms.findIndex(r => r.id === room.id);
+              rooms[index] = room;
+              this.setState({
+                rooms,
+              });
             },
             onUserStartedTyping: user => {
               this.setState({
