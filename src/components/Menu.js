@@ -40,27 +40,25 @@ class Menu extends Component {
         className={visibility} >
             <div className="fly-container">
                 <WhosOnlineList
-                    currentUser={this.props.currentUser}
-                        users={this.props.currentRoom.users}
-                        className="whosOnlineListContainer"
+                  currentUser={this.props.currentUser}
+                  users={this.props.currentRoom.users}
+                  className="whosOnlineListContainer"
                   sendDM={this.props.sendDM}
                 />
-                <RoomList
-                            currentUser={this.props.currentUser}
-                            subscribeToRoom={this.props.subscribeToRoom}
-                            rooms={this.props.rooms}
-                        
-                            />
-                <NewRoomForm createRoom={this.props.createRoom} currentUser={this.props.currentUser} />
-                <Paint handleClick={this.props.handleClick} />
-                </div>
-            {/* <Router>
-            
-
-
-            <Link to="/paint/">Paint</Link>
-            <Route path="/paint/" component={Paint} />
-            </Router> */}
+                <RoomList   
+                  currentRoom={this.props.currentRoom}
+                  currentUser={this.props.currentUser}
+                  subscribeToRoom={this.props.subscribeToRoom}
+                  rooms={this.props.rooms}
+                />
+                <NewRoomForm 
+                  createRoom={this.props.createRoom} 
+                  currentUser={this.props.currentUser} 
+                />
+                <Paint 
+                  handleClick={this.props.handleClick} 
+                />
+            </div>
       </div>
     );
   }
