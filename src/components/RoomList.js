@@ -3,15 +3,19 @@ import './WhosOnlineList.css'
 
 class RoomLink extends React.Component {
     render(){
-    
+        const isRoomActive = this.props.room.id === this.props.currentRoom.id ? 'active' : '';
         return (
-            <li key={this.props.room.id} className={"room " + this.props.room.active}>
+            <li className={isRoomActive} key={this.props.room.id}  >
                  <a key={this.props.room.id}
                      onClick={(e) => {
                          this.props.subscribeToRoom(this.props.room.id)
                      } }
                      >
-                     # {this.props.room.name}
+                     <span className="room-name"># {this.props.room.name} </span>
+                     {this.props.room.unreadCount > 0 ? (
+                        <span className="room-unread">{this.props.room.unreadCount}</span>
+                    ): null}
+                      
                  </a>
             </li>
         )
@@ -27,7 +31,7 @@ class RoomList extends React.Component {
                 <ul>
                         {orderedRooms.map(room => {
                             if (!room.isPrivate){
-                                return ( <RoomLink key={room.id} room={room} subscribeToRoom={this.props.subscribeToRoom} />)
+                                return ( <RoomLink key={room.id} currentRoom={this.props.currentRoom} room={room} subscribeToRoom={this.props.subscribeToRoom} />)
                             } else {
                                 return (
                                     null
@@ -39,7 +43,7 @@ class RoomList extends React.Component {
                 <ul>
                         {orderedRooms.map(room => {
                             if (room.isPrivate){
-                                return ( <RoomLink key={room.id} room={room} subscribeToRoom={this.props.subscribeToRoom} />)
+                                return ( <RoomLink key={room.id} currentRoom={this.props.currentRoom} room={room} subscribeToRoom={this.props.subscribeToRoom} />)
                             } else {
                                 return (
                                     null
