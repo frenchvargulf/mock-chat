@@ -11,7 +11,7 @@ class RoomLink extends React.Component {
                          this.props.subscribeToRoom(this.props.room.id)
                      } }
                      >
-                     <span className="room-name"># {this.props.room.name} </span>
+                     <span className="room-name"> # {this.props.room.name} </span>
                      {this.props.room.unreadCount > 0 ? (
                         <span className="room-unread">{this.props.room.unreadCount}</span>
                     ): null}
