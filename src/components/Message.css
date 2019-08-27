@@ -1,31 +1,33 @@
-/* 
-  .message-container{ */
-    /* min-width: 50px;
+
+
+  .message-container{ 
+     min-width: 50px;
     max-width: 100%;
     display: flex;
     flex-direction: column;
   }
-   */
+  
 
   .message-cnt{
     margin: 0;
-    padding: 0;
+    padding: 10px 0;
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    border-bottom: 1px solid lightgray;
+  }
 
+  .info-container{
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
   }
   .Message {
-   background-color: #f9f7f9;
-   display: flex;
-   min-height: 50px;
-   padding: 0 5px;
-   align-items: center;
-   /* justify-content: space-between; */
-   flex-shrink: 0;
-   border-left: 10px solid #96D9FF;
-   min-width: 10px;
-   max-width: 100%;
+
+    font-size: 13px;
   }
 
  .message-sender{
-    font-size: 13px;
+    font-weight: 900;
   }
   
