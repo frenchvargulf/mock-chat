@@ -16,8 +16,8 @@ const pusher = new Pusher({
 
 // Init chatkit instance
 const chatkit = new Chatkit.default({
-  instanceLocator: `v1:us1:301e1216-59fa-432c-bc17-165703f44329`,
-  key: 'd952671c-e492-4193-9508-8ff1fcd00efb:2FgBLt47367hcyz0nj8R7HvDWvSKa6jZ+9g5gWQ4UN4=',
+  instanceLocator: `v1:us1:3046b544-c410-45af-a75e-76de8c1c2865`,
+  key: 'fbb8f373-e11f-4c9b-8f5f-0ad8cd672e3e:JlSRN0yOOpq4jG0MwHeh9nlAeH+IMTOT6cKaoFXC1cE=',
 })
 
 app.use(bodyParser.json())
