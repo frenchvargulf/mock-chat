@@ -3,13 +3,12 @@ import GetUsername from './components/GetUsername';
 import Chat from './components/Chat'
 
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      currentUsername: '',
-      visibleScreen: "getUsernameScreen"
-    }
+  state = {
+    currentUsername: '',
+    visibleScreen: "getUsernameScreen"
   }
+  
+  // Authenticate users
   onUsernameSubmitted(username) {
     fetch('/users', {
       method: 'POST',
@@ -26,13 +25,18 @@ class App extends Component {
     })
     .catch(error => console.error('error', error))
   }
+
   render() {
-      if (this.state.visibleScreen === 'getUsernameScreen') {
+    const {visibleScreen, currentUsername} = this.state;
+
+      if (visibleScreen === 'getUsernameScreen') {
         return <GetUsername onSubmit={(e) => this.onUsernameSubmitted(e)} />
       }
-      if (this.state.visibleScreen === 'Chat') {
-        return <Chat currentUsername={this.state.currentUsername} />
+
+      if (visibleScreen === 'Chat') {
+        return <Chat currentUsername={currentUsername} />
       }
+      
   }
 }
 
