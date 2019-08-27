@@ -4,7 +4,18 @@ import Chatkit from '@pusher/chatkit-client';
 import Message from './Message';
 import TypingIndicator from './TypingIndicator';
 import MenuContainer from './Nav';
-import Canvas from "./components"
+import Canvas from "./components";
+import { Image } from "react-feather";
+import {
+  // [..]
+  onDrop,
+  openImageUploadDialog,
+  closeImageUploadDialog,
+  sendFile
+} from "../methods";
+import ImageUploadDialog from "./ImageUploadDialog";
+import { format } from 'date-fns';
+import './ImageUploadDialog.css'
 
 class Chat extends Component {  
   constructor(props){
@@ -21,17 +32,35 @@ class Chat extends Component {
       newMessage: [],
       paint: false,
       rooms: [],
+      pictures: [],
+      showImageUploadDialog: false,
+      fileUploadMessage: ""
     }  
-    this.state.currentUser.sendMessage = this.sendMessage.bind(this);      
-    this.getRooms = this.getRooms.bind(this)
-
+    // this.state.currentUser.sendMessage = this.sendMessage.bind(this);      
+    this.getRooms = this.getRooms.bind(this);
+    this.onDrop = onDrop.bind(this);
+    this.openImageUploadDialog = openImageUploadDialog.bind(this);
+    this.closeImageUploadDialog = closeImageUploadDialog.bind(this);
+    this.sendFile = sendFile.bind(this);
   }      
   
   sendMessage(currentUser) {
+
+
+    const parts = [];
+      parts.push({
+        type: "text/plain",
+        content: `${this.state.chatInput}`,
+        // text: this.state.chatInput,
+      });
+    
+
+
     if(this.state.chatInput){
-      currentUser.sendMessage({
-        text: this.state.chatInput,
+      currentUser.sendMultipartMessage({
+        // text: this.state.chatInput,
         roomId: this.state.currentRoom.id,
+        parts
       })
     }  
     this.setState({ 
@@ -39,6 +68,9 @@ class Chat extends Component {
         newMessage: "",
     })          
   }       
+
+
+
 
   handleClick(){
     if ( !this.state.paint ){
@@ -52,7 +84,6 @@ class Chat extends Component {
     }
 
 } 
-
 
   onSubmit(e){
     e.preventDefault();
@@ -82,7 +113,7 @@ class Chat extends Component {
   subscribeToRoom(roomId) {
       const {currentUser, currentRoom} = this.state;
       // console.log(`Subskyrbuję to ${roomId}`)
-
+      
       this.setState({
           messages: [],
           
@@ -92,15 +123,20 @@ class Chat extends Component {
           messageLimit: 100,
           hooks: {
             onMessage: message => {
-                            let newMessages = this.state.messages;           
+                            let newMessages = this.state.messages;  
+                            console.log(message)         
                             newMessages.push(<Message 
+                                                    currentUser= {
+                                                      this.state.currentUser
+                                                    }
+                                                    media={message.attachment}
+                                                    time = { format(new Date(`${message.updatedAt}`), 'HH:mm') }
                                                     key={ 
                                                         this.state.messages.length 
                                                     } 
                                                     senderId={ 
                                                         message.senderId 
                                                     }
-                                                    
                                                     text={ message.text 
                                                     }/>)         
                             this.setState({messages: newMessages});
@@ -144,10 +180,6 @@ class Chat extends Component {
       })
       .then( this.getRooms())
       .catch(error => console.error('error', error))
-  }
-
-  handleMouseDown(){
-
   }
 
   sendDM(ids){
@@ -196,7 +228,6 @@ class Chat extends Component {
     return Promise.resolve();
   }
 
-
   createRoom(name) {
     this.state.currentUser.createRoom({
         name,
@@ -231,7 +262,9 @@ class Chat extends Component {
   }   
 
   render() {
-    const {currentUser, currentRoom, joinableRooms, joinedRooms, roomId, paint, typingUsers, messages, chatInput} = this.state
+    const {currentUser, currentRoom, joinableRooms, joinedRooms, roomId, paint, typingUsers, messages, chatInput, showImageUploadDialog,
+    fileUploadMessage} = this.state
+
     return ( 
       <div className="container">
         <div className="sidebar-container">
@@ -253,36 +286,47 @@ class Chat extends Component {
             (
               <Canvas currentUser={currentUser} />
             ) : (
-                    <>
-                        <ul className="messages">
-                            { messages } 
-                        </ul>
-                        <TypingIndicator typingUsers={typingUsers} /> 
-                        <form id="chat-form"
-                          className="composer-container"
-                          value={ chatInput } 
-                          onSubmit={ (e) => this.onSubmit(e)}
-                        >                    
-                        <input 
-                               type="text"
-                               className="composer"
-                               placeholder='Type message...'
-                               name=""
-                               value={ chatInput } 
-                               autoFocus={true} 
-                               onChange={ e => this.sendTypingEvent(e) } 
-                               />                 
-                       </form>               
-                    </>  
-                )
-            }
+            <>
+                <ul className="messages">
+                  {messages} 
+                  {/* <ChatSession messages={messages}/> */}
+                </ul>
+                <TypingIndicator typingUsers={typingUsers} /> 
+                <form id="chat-form"
+                  className="composer-container"
+                  value={ chatInput } 
+                  onSubmit={ (e) => this.onSubmit(e)}
+                >  
+                <button
+                    onClick={this.openImageUploadDialog}
+                    type="button"
+                    className="btn image-picker"
+                  ><Image/> </button>             
+                <input 
+                       type="text"
+                       className="composer"
+                       placeholder='Type message...'
+                       name=""
+                       value={ chatInput } 
+                       autoFocus={true} 
+                       onChange={ e => this.sendTypingEvent(e) } 
+                       />                 
+               </form>
+               {showImageUploadDialog ? (
+              <ImageUploadDialog
+                handleInput={this.handleInput}
+                fileUploadMessage={fileUploadMessage}
+                onDrop={this.onDrop}
+                sendFile={this.sendFile}
+                closeImageUploadDialog={this.closeImageUploadDialog}
+              />
+            ) : null}               
+            </>  )}
           </div>
         </div>
-
       </div>
       ); 
-    }
-
+  }
 
 }
 
