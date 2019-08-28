@@ -14,7 +14,7 @@ class Message extends Component{
                 </div>
                 <div className="info-container">
                     <div className="sender">
-                    <span className="message-time">{this.props.time}</span> 
+                        <span className="message-time">{this.props.time}</span> 
                         <div className="message-sender"> 
                             { this.props.senderId }
                         </div>

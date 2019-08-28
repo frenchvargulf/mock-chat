@@ -17,6 +17,16 @@
     border-bottom: 1px solid lightgray;
   }
 
+  .sender{
+    display: flex;
+    align-items: center;
+    
+  }
+  .message-time{
+    font-size: 15px;
+    padding-right: 10px;
+  } 
+
   .info-container{
     display: flex;
     flex-direction: column;
