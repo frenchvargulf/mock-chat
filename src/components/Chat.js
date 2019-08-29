@@ -45,16 +45,12 @@ class Chat extends Component {
   }      
   
   sendMessage(currentUser) {
-
-
     const parts = [];
       parts.push({
         type: "text/plain",
         content: `${this.state.chatInput}`,
         // text: this.state.chatInput,
       });
-    
-
 
     if(this.state.chatInput){
       currentUser.sendMultipartMessage({
@@ -69,7 +65,12 @@ class Chat extends Component {
     })          
   }       
 
-
+  handleInput(event){
+    this.setState({
+      fileUploadMessage: event.target.value,
+    })
+    console.log(event.target.value)
+  }
 
 
   handleClick(){
@@ -83,7 +84,14 @@ class Chat extends Component {
         })
     }
 
-} 
+  } 
+
+  // handleInput(event){
+  //   console.log(event.target.value)
+  //   this.setState({
+  //     chatInput: event.target.value
+  //   });
+  // }
 
   onSubmit(e){
     e.preventDefault();
@@ -123,8 +131,7 @@ class Chat extends Component {
           messageLimit: 100,
           hooks: {
             onMessage: message => {
-                            let newMessages = this.state.messages;  
-                            console.log(message)         
+                            let newMessages = this.state.messages;    
                             newMessages.push(<Message 
                                                     currentUser= {
                                                       this.state.currentUser
@@ -314,7 +321,10 @@ class Chat extends Component {
                </form>
                {showImageUploadDialog ? (
               <ImageUploadDialog
-                handleInput={this.handleInput}
+                handleInput={ e => this.handleInput(e)}
+                // sendMessage={this.sendMessage}
+                // value={ chatInput } 
+                // onSubmit={ (e) => this.onSubmit(e)}
                 fileUploadMessage={fileUploadMessage}
                 onDrop={this.onDrop}
                 sendFile={this.sendFile}
