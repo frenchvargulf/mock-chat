@@ -50,13 +50,12 @@ body{
 .chat-form{
   width: 100%;
   display: flex;
-  flex-grow: 1;
+
   min-height: 1px;
   min-width: 1px;
 }
 .composer-container {
   min-width: 1px;
-  max-width: calc(100%-20px);
   padding-left: 20px;
   padding-bottom: 10px;
   display: flex;
@@ -82,8 +81,9 @@ body{
 
 .text-area {
   background-color: #fbfbfb;
-  height: 10vh;
+  height: 50vh;
   margin: 0 auto;
+  min-width: 1px;
   width: 100%;
 }
 

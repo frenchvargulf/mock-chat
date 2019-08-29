@@ -33,7 +33,8 @@
     padding: 0 10px;
   }
   .Message {
-
+    display: flex;
+    flex-direction: column;
     font-size: 13px;
   }
 
