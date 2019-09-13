@@ -1,7 +1,7 @@
 import React from 'react';
 import ImageUploader from "react-images-upload";
 import { X } from 'react-feather';
-import './ImageUploadDialog.css'
+import './ImageUploadDialog.scss'
 
 const ImageUploadDialog = (props) => {
   const { onDrop, closeImageUploadDialog, handleInput, fileUploadMessage, sendFile, sendMessage } = props;

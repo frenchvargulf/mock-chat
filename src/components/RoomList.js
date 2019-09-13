@@ -1,5 +1,5 @@
 import React from 'react';
-import './WhosOnlineList.css'
+import './WhosOnlineList.scss'
 
 class RoomLink extends React.Component {
     render(){

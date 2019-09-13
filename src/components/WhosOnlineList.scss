@@ -1,13 +1,34 @@
-.online-title {
-    text-transform: uppercase;
-    font-weight: 700;
-    text-align: center;
-    margin: 0;
-    padding: 20px 0 0 0;
+// .room-title {
+//     text-transform: uppercase;
+//     font-weight: 700;
+//     text-align: center;
+//     margin: 0;
+//     padding: 20px 0 0 0;
+// }
+
+.user{
+    color: #fff;
+    .room-title{
+        text-align: left;
+        font-size: 20px;
+    }
+    .user-title{
+        font-size: 15px;
+    }
 }
 
+.rooms-list li {
+    cursor:pointer;
+}
+
+
 .active {
-    background-color: rgba(255,255,255, 0.5);
+    background-color: #1264a3;
+    cursor:pointer;
+    .room-name{
+        color: #fff;
+    }
+
 }
 
 .room-unread{
@@ -19,12 +40,17 @@
     margin-right: 10px;
 }
 
+
 .room-title {
     text-transform: uppercase;
     font-weight: 700;
     text-align: center;
+    cursor: pointer;
 }
 
+.room-title:hover{
+    color: #fff;
+}
 ul {
     list-style: none;
     padding: 0;
@@ -33,20 +59,44 @@ ul {
 
 .send-dm-btn {
     opacity: 0.8;
-    color: dodgerblue;
+    color: rgb(188, 171, 188);
     display: block;
-    border-radius: 50%;
+ 
     display: flex;
     justify-content: center;
     align-items: center;
     margin-left: auto;
     margin-right: 20px;
     cursor: pointer;
+    position: relative;
+    font-weight: 700;
+    
     
 }
+
+.send-dm-btn:hover{
+    color: #fff;
+}
+
+.send-dm-btn:before{
+    content:"";
+    width: 15px;
+    height: 15px;
+    border: 1px solid rgb(188, 171, 188);
+    border-radius: 50%;
+    position: absolute;
+    top: 20%;
+}
+
+
+.send-dm-btn:before:hover{
+    border: 1px solid #fff;
+}
+
+
 .rooms-list a {
     text-decoration: none;
-    color: white;
+    color: #bcabbc;
 }
 
 .new-room-form-container {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import "./GetUsername.css"
+import "./GetUsername.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
     class GetUsername extends Component {
@@ -21,11 +21,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
         <div className="welcome-section">
             <div className="wrapper">
                 <h2 className="login-header">Login</h2>
-                <h3 className="login-instructions">Please insert User</h3>
+                <h3 className="login-instructions">Username</h3>
                 <form onSubmit={ (e) => this.onSubmit(e) }>
                     <input
                     type="text"
-                    placeholder="Your full name"
+                    placeholder="Please type in User"
                     onChange={ (e) => this.onChange(e)}
                     />
                 </form>

@@ -35,16 +35,23 @@ app.use((req, res, next) => {
 
 
 // Post methord to create users
-app.post('/users', (req, res) => {
+app.post('http://localhost:4000/users', (req, res) => {
   const { username } = req.body
   console.log(username);
   chatkit
     .createUser({ 
       id: username, 
-      name: username 
+      name: username,
+      // avatarUrl: null,
+      // customData: {
+      //   password: null,
+      // }
     })
-    .then(() => res.sendStatus(201))
-    .catch(error => {
+    .then(() => {
+      console.log(res)
+      res.sendStatus(201)
+    })
+      .catch(error => {
       if (error.error_type === 'services/chatkit/user_already_exists') {
         res.sendStatus(200)
       } else {
@@ -52,6 +59,11 @@ app.post('/users', (req, res) => {
       }
     })
 })
+
+// app.post("/authenticate", (req, res) => {
+//   const authData = chatkit.authenticate({ userId: req.query.user_id });
+//   res.status(authData.status).send(authData.body);
+// });
 
 app.post('/paint', (req, res) => {
   pusher.trigger('painting', 'draw', req.body)

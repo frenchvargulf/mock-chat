@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import "./Menu.css";
+import "./Menu.scss";
 import WhosOnlineList from './WhosOnlineList';
 import RoomList from './RoomList';
 import NewRoomForm from './NewRoom';
-import './WhosOnlineList.css';
+import './WhosOnlineList.scss';
 import Canvas from './components';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -13,7 +13,7 @@ class Paint extends Component {
   render(){
     return (
       <div>
-        <h3 className="online-title">Painting Space</h3>
+        <h3 className="room-title">Painting Space</h3>
         <div className="main">
           <div className="color-guide">
           <button onClick={this.props.handleClick} className="switch-button">Switch</button>
@@ -42,6 +42,7 @@ class Menu extends Component {
                 <WhosOnlineList
                   currentUser={this.props.currentUser}
                   users={this.props.currentRoom.users}
+                  room={this.props.currentRoom.name}
                   className="whosOnlineListContainer"
                   sendDM={this.props.sendDM}
                 />

@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import '../App.css';
+import '../App.scss';
 import Chatkit from '@pusher/chatkit-client';
 import Message from './Message';
 import TypingIndicator from './TypingIndicator';
 import MenuContainer from './Nav';
 import Canvas from "./components";
-import { Image } from "react-feather";
+import { Image, Smile } from "react-feather";
 import {
-  // [..]
   onDrop,
   openImageUploadDialog,
   closeImageUploadDialog,
@@ -15,7 +14,30 @@ import {
 } from "../methods";
 import ImageUploadDialog from "./ImageUploadDialog";
 import { format } from 'date-fns';
-import './ImageUploadDialog.css'
+import UpperContainer from './UpperContainer'
+import './ImageUploadDialog.scss'
+import EmojiPicker from 'emoji-picker-react';
+import JSEMOJI from 'emoji-js';
+import 'emoji-picker-react/dist/universal/style.scss'; // or any other way you consume scss files
+
+
+    let jsemoji = new JSEMOJI();
+    console.log(jsemoji)
+    // set the style to emojione (default - apple)
+    jsemoji.img_set = 'emojione';
+    // set the storage location for all emojis
+    jsemoji.img_sets.emojione.path = 'https://cdn.jsdelivr.net/emojione/assets/3.0/png/32/';
+    console.log(jsemoji.img_sets.emojione.path)
+    // // set the storage location for all emojis
+    // jsemoji.img_sets.emojione.path = object.name;
+    
+    // // some more settings...
+    jsemoji.supports_css = false;
+    jsemoji.allow_native = false;
+    jsemoji.init_env();
+    jsemoji.replace_mode = 'unified';
+    console.log(jsemoji)
+
 
 class Chat extends Component {  
   constructor(props){
@@ -23,18 +45,20 @@ class Chat extends Component {
     this.state = {
       messages: [],
       currentRoom: {},
-      roomId: "11abd904-2e78-4393-9b1d-5eaa276adeb2",
+      roomId: "112f0357-01d9-4159-b900-a13dbda2c6cd",
       currentUser: {},
       typingUsers: [],
       chatInput: "",
       joinableRooms: [],
       joinedRooms: [],
-      newMessage: [],
+      newMessage: "",
       paint: false,
       rooms: [],
       pictures: [],
       showImageUploadDialog: false,
-      fileUploadMessage: ""
+      fileUploadMessage: "",
+      showEmojiPicker: false,
+      emoji: [],
     }  
     // this.state.currentUser.sendMessage = this.sendMessage.bind(this);      
     this.getRooms = this.getRooms.bind(this);
@@ -51,6 +75,17 @@ class Chat extends Component {
         content: `${this.state.chatInput}`,
         // text: this.state.chatInput,
       });
+      // console.log(this.state.emoji)
+
+      
+      if (this.state.emoji) {
+        this.state.emoji.forEach(emoji => {
+          parts.push({
+            url: emoji,
+            type: "image/gif",
+          });
+        });
+    }
 
     if(this.state.chatInput){
       currentUser.sendMultipartMessage({
@@ -59,6 +94,8 @@ class Chat extends Component {
         parts
       })
     }  
+
+
     this.setState({ 
         chatInput: "",
         newMessage: "",
@@ -118,6 +155,7 @@ class Chat extends Component {
     .catch(err => console.log('error on joinableRooms: ', err))
   }
 
+
   subscribeToRoom(roomId) {
       const {currentUser, currentRoom} = this.state;
       // console.log(`Subskyrbuję to ${roomId}`)
@@ -133,27 +171,29 @@ class Chat extends Component {
             onMessage: message => {
                             let newMessages = this.state.messages;    
                             newMessages.push(<Message 
-                                                    currentUser= {
-                                                      this.state.currentUser
-                                                    }
-                                                    media={message.attachment}
-                                                    time = { format(new Date(`${message.updatedAt}`), 'HH:mm') }
-                                                    key={ 
-                                                        this.state.messages.length 
-                                                    } 
-                                                    senderId={ 
-                                                        message.senderId 
-                                                    }
-                                                    text={ message.text 
-                                                    }/>)         
-                            this.setState({messages: newMessages});
+                              currentUser= {
+                                this.state.currentUser
+                              }
+                              media={message.attachment}
+                              time = { format(new Date(`${message.updatedAt}`), 'HH:mm') }
+                              key={ 
+                                this.state.messages.length 
+                              } 
+                              senderId={ 
+                                message.senderId 
+                              }
+                              text={ message.text 
+                              }/>)         
+                              // this.setState({messages: newMessages}
+                              // () => this.showNotification(message));
+                              
+                              if (currentRoom === null) return;
+              return currentUser.setReadCursor({
+                roomId: roomId,
+                position: message.id,
+              });
 
-                            if (currentRoom === null) return;
-
-                            return currentUser.setReadCursor({
-                              roomId: roomId,
-                              position: message.id,
-                            });
+                            
 
             },
             onRoomUpdated: room => {
@@ -163,6 +203,7 @@ class Chat extends Component {
               this.setState({
                 rooms,
               });
+              
             },
             onUserStartedTyping: user => {
               this.setState({
@@ -181,12 +222,24 @@ class Chat extends Component {
 
           
           },
-        })   
+      })   
+
+      // .then(this.setState({
+      //   currentUser,
+      // }, () => this.grantNotificationPermission()
+      // ))
       .then(currentRoom => {
         this.setState({ currentRoom })
       })
       .then( this.getRooms())
       .catch(error => console.error('error', error))
+  }
+
+  
+  showEmojiPicker() {
+    this.setState({
+      openEmojiPicker: !this.state.openEmojiPicker,
+    })
   }
 
   sendDM(ids){
@@ -235,6 +288,65 @@ class Chat extends Component {
     return Promise.resolve();
   }
 
+  // grantNotificationPermission = () => {
+  //   if (!('Notification' in window)) {
+  //     alert('This browser does not support system notifications');
+  //     return;
+  //   }
+
+  //   if (Notification.permission === 'granted') {
+  //     new Notification('You are already subscribed to message notifications');
+  //     return;
+  //   }
+
+  //   if (
+  //     Notification.permission !== 'denied' ||
+  //     Notification.permission === 'default'
+  //   ) {
+  //     Notification.requestPermission().then(result => {
+  //       if (result === 'granted') {
+  //         new Notification(
+  //           'Awesome! You will start receiving notifications shortly'
+  //         );
+  //       }
+  //     });
+  //   }
+  // };
+
+  // showNotification = message => {
+  //   const { username } = this.state;
+
+  //     if (message.senderId !== username) {
+  //       const title = message.senderId;
+  //       const body = message.text;
+
+  //       new Notification(title, { body });
+  //     }
+
+  // // };
+  addEmoji(e, object, event) {
+    //  console.log(e.unified)
+    console.log(object)
+    //  console.log(event)
+    const { newMessage } = this.state;
+
+    //  jsemoji.replace_colons(`:${object.name}:`)
+    //  console.log(jsemoji)
+    let emoji = jsemoji.replace_colons(`:${object.name}:`);
+    const text = `${newMessage}:${object.name}:`;
+    let path = `${jsemoji.img_sets.emojione.path}${object.unified}.png`
+
+    console.log(emoji)
+
+     this.setState({
+      //  newMessage:`${newMessage}`,
+       openEmojiPicker: false,
+       chatInput: `${this.state.chatInput}${text}`,
+       emoji: [...this.state.emoji, path]
+     });
+     console.log(this.state.newMessage)
+  }
+
   createRoom(name) {
     this.state.currentUser.createRoom({
         name,
@@ -252,10 +364,10 @@ class Chat extends Component {
 
   componentDidMount() {
     const chatManager = new Chatkit.ChatManager({
-      instanceLocator: 'v1:us1:301e1216-59fa-432c-bc17-165703f44329',
+      instanceLocator: 'v1:us1:bca0fa4c-b9c7-4478-a63d-ad0d81584e73',
       userId: this.props.currentUsername,
       tokenProvider: new Chatkit.TokenProvider({
-      url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/301e1216-59fa-432c-bc17-165703f44329/token',
+      url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/bca0fa4c-b9c7-4478-a63d-ad0d81584e73/token',
       }),
     })
     chatManager
@@ -268,9 +380,10 @@ class Chat extends Component {
       .catch(error => console.error('error', error))
   }   
 
+
   render() {
     const {currentUser, currentRoom, joinableRooms, joinedRooms, roomId, paint, typingUsers, messages, chatInput, showImageUploadDialog,
-    fileUploadMessage} = this.state
+    fileUploadMessage, openEmojiPicker} = this.state
 
     return ( 
       <div className="container">
@@ -288,17 +401,25 @@ class Chat extends Component {
             />
         </div>
         <div className="messanger-container">
-          <div className="wrapper">
+          <div className="upper-container"> 
+          <UpperContainer currentUser={currentUser}
+                        users={currentRoom.users}
+                        currentRoom={currentRoom}
+                        rooms={[...joinableRooms, ...joinedRooms]}
+                        roomId={roomId}
+            />
+          </div>
+          <div className="lower-container">
+            <div className="main-body-wrapper">
            {(paint === true)? 
             (
               <Canvas currentUser={currentUser} />
             ) : (
-            <>
+            <div className="messages-list">
                 <ul className="messages">
                   {messages} 
-                  {/* <ChatSession messages={messages}/> */}
                 </ul>
-                <TypingIndicator typingUsers={typingUsers} /> 
+                {/* <TypingIndicator typingUsers={typingUsers} /> 
                 <form id="chat-form"
                   className="composer-container"
                   value={ chatInput } 
@@ -329,9 +450,71 @@ class Chat extends Component {
                 onDrop={this.onDrop}
                 sendFile={this.sendFile}
                 closeImageUploadDialog={this.closeImageUploadDialog}
-              />
-            ) : null}               
-            </>  )}
+              /> */}
+            {/* ) : null}                */}
+            </div>  )}
+          </div>
+            <div className="side-container">Jestem z boku!</div>
+          </div>
+          <div className="bottom-cnt">
+            <div className="wrap">
+              
+              <form id="chat-form"
+                className="composer-container"
+                value={ chatInput } 
+                onSubmit={ (e) => this.onSubmit(e)}
+              >  
+              <button
+                  onClick={this.openImageUploadDialog}
+                  type="button"
+                  className="btn image-picker"
+                ><Image/> </button> 
+                
+              <div style={{width: "100%", minHeight:"0", display:"flex", border:"1px solid black", borderRadius:"5px"}}>            
+                <input 
+                       type="text"
+                       className="composer"
+                       placeholder='Type message...'
+                       name=""
+                       value={ chatInput } 
+                       autoFocus={true} 
+                       onChange={ e => this.sendTypingEvent(e) } 
+                       />     
+
+                  <button
+                    onClick={(e) => this.showEmojiPicker(e)}
+                    type="button"
+                    className="btn emoi-picker"
+                  >  
+                <Smile style={{backgroundColor: "#fff"}}/></button> 
+              </div>  
+            </form>
+             
+               
+             {openEmojiPicker? (
+               (<div className="dialog-emoji-container">
+                 <div className="dialog-emoji">
+                    <EmojiPicker onEmojiClick={(e, object, event) => this.addEmoji(e, object,event)} />
+                 </div>
+               </div>)
+              ) : null}    
+               
+             {showImageUploadDialog ? (
+              <ImageUploadDialog
+                handleInput={ e => this.handleInput(e)}
+                // sendMessage={this.sendMessage}
+                // value={ chatInput } 
+                // onSubmit={ (e) => this.onSubmit(e)}
+                fileUploadMessage={fileUploadMessage}
+                onDrop={this.onDrop}
+                sendFile={this.sendFile}
+                closeImageUploadDialog={this.closeImageUploadDialog}
+              /> 
+              
+               ) : null}    
+                 
+              <TypingIndicator typingUsers={typingUsers} /> 
+              </div>
           </div>
         </div>
       </div>

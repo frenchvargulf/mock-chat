@@ -1,18 +1,29 @@
 import React, { Component } from 'react'
-import './WhosOnlineList.css'
+import './WhosOnlineList.scss'
 
 class WhosOnlineList extends Component {
   renderUsers() {
     return (
       <div>
-        <h3 className="online-title">Users Online</h3>
+        <div className="user">
+          <div className="room-title">CHATT APP</div>
+          <div className="user-title">
+            {this.props.users.map((user, index) => {
+              if (user.id === this.props.currentUser.id) {
+                return (
+                  <WhosOnlineListItem key={index} presenceState="online">
+                    {user.name} (You) 
+                  </WhosOnlineListItem>
+                )
+            }})}
+          </div>
+        </div>
+        <h3 className="room-title">Users Online</h3>
         <ul>
           {this.props.users.map((user, index) => {
             if (user.id === this.props.currentUser.id) {
               return (
-                <WhosOnlineListItem key={index} presenceState="online">
-                  {user.name} (You) 
-                </WhosOnlineListItem>
+                null
               )
             }
             return (

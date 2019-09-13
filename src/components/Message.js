@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import './Message.css'
+import './Message.scss'
 
 const Img = ({src}) => {
     return (<img src={src} alt={src}></img>)
@@ -7,10 +7,9 @@ const Img = ({src}) => {
 
 class Message extends Component{
     render () {
-        return (
+        return (            
             <li key={this.props.id} className="message-cnt" >
-                <div className="avatar-container">
-                    <img style={{width:"50px", height:"50px", backgroundImage:"grey"}}></img>
+                <div style={{width:"50px", height:"50px", backgroundImage:"grey"}} className="avatar-container">
                 </div>
                 <div className="info-container">
                     <div className="sender">
