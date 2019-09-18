@@ -1,0 +1,88 @@
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.welcome-section{
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    background: rgba(183,222,237,1);
+    background: -moz-linear-gradient(left, rgba(183,222,237,1) 0%, rgba(33,180,226,1) 37%, rgba(113,206,239,1) 50%, rgba(173,3,173,1) 99%, rgba(183,222,237,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(183,222,237,1)), color-stop(37%, rgba(33,180,226,1)), color-stop(50%, rgba(113,206,239,1)), color-stop(99%, rgba(173,3,173,1)), color-stop(100%, rgba(183,222,237,1)));
+    background: -webkit-linear-gradient(left, rgba(183,222,237,1) 0%, rgba(33,180,226,1) 37%, rgba(113,206,239,1) 50%, rgba(173,3,173,1) 99%, rgba(183,222,237,1) 100%);
+    background: -o-linear-gradient(left, rgba(183,222,237,1) 0%, rgba(33,180,226,1) 37%, rgba(113,206,239,1) 50%, rgba(173,3,173,1) 99%, rgba(183,222,237,1) 100%);
+    background: -ms-linear-gradient(left, rgba(183,222,237,1) 0%, rgba(33,180,226,1) 37%, rgba(113,206,239,1) 50%, rgba(173,3,173,1) 99%, rgba(183,222,237,1) 100%);
+    background: linear-gradient(to right, rgba(183,222,237,1) 0%, rgba(33,180,226,1) 37%, rgba(113,206,239,1) 50%, rgba(173,3,173,1) 99%, rgba(183,222,237,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b7deed', endColorstr='#b7deed', GradientType=1 );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.welcome-section .wrapper{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // justify-content: center;
+    width: 300px;
+    height: 400px;
+    max-height: 100%;
+    border: 5px solid #000;
+    color: #fff;
+    background-color: rgba( 0, 0 , 0, 0.8);
+
+   
+    
+}
+.login-header{
+    text-transform: uppercase;
+    font-size: 30px;
+    padding-top: 30px;
+}
+
+.login-instructions{
+    text-transform: uppercase;
+
+}
+
+.welcome-section .wrapper form{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.welcome-section input{
+    background: transparent;
+    border: 1px solid black;
+    color: dodgerblue;
+}
+/* 
+button{
+    outline: none;
+    border: none;
+    background-color: dodgerblue;
+    width: 50px;
+    height: 50px;
+    display: block;
+    color: #fff;
+    font-size: 30px;
+    font-weight: 900;
+} */

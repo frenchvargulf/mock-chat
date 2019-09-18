@@ -7,15 +7,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
        super(props)
        this.state = {
          username: '',
+        //  password: ''
        }
     }
+
     onSubmit(e) {
         e.preventDefault()
         this.props.onSubmit(this.state.username)
     }
+
     onChange(e) {
         this.setState({ username: e.target.value })
     }
+
     render() {
         return (
         <div className="welcome-section">

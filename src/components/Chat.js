@@ -10,7 +10,11 @@ import {
   onDrop,
   openImageUploadDialog,
   closeImageUploadDialog,
-  sendFile
+  sendFile,
+  // updateLanguage,
+  // translateText
+  handleSlashCommand,
+  sendNews
 } from "../methods";
 import ImageUploadDialog from "./ImageUploadDialog";
 import { format } from 'date-fns';
@@ -18,25 +22,20 @@ import UpperContainer from './UpperContainer'
 import './ImageUploadDialog.scss'
 import EmojiPicker from 'emoji-picker-react';
 import JSEMOJI from 'emoji-js';
-import 'emoji-picker-react/dist/universal/style.scss'; // or any other way you consume scss files
+import 'emoji-picker-react/dist/universal/style.scss'; 
+import Picker from 'react-giphy-component';
+import { css } from 'glamor';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
-
-    let jsemoji = new JSEMOJI();
-    console.log(jsemoji)
-    // set the style to emojione (default - apple)
-    jsemoji.img_set = 'emojione';
-    // set the storage location for all emojis
-    jsemoji.img_sets.emojione.path = 'https://cdn.jsdelivr.net/emojione/assets/3.0/png/32/';
-    console.log(jsemoji.img_sets.emojione.path)
-    // // set the storage location for all emojis
-    // jsemoji.img_sets.emojione.path = object.name;
-    
-    // // some more settings...
-    jsemoji.supports_css = false;
-    jsemoji.allow_native = false;
-    jsemoji.init_env();
-    jsemoji.replace_mode = 'unified';
-    console.log(jsemoji)
+// Global code for Emojis
+let jsemoji = new JSEMOJI();
+jsemoji.img_set = 'emojione';
+jsemoji.img_sets.emojione.path = 'https://cdn.jsdelivr.net/emojione/assets/3.0/png/32/';
+console.log(jsemoji.img_sets.emojione.path)
+jsemoji.supports_css = false;
+jsemoji.allow_native = false;
+jsemoji.init_env();
+jsemoji.replace_mode = 'unified';
 
 
 class Chat extends Component {  
@@ -58,33 +57,61 @@ class Chat extends Component {
       showImageUploadDialog: false,
       fileUploadMessage: "",
       showEmojiPicker: false,
+      openGiphyPicker: false,
       emoji: [],
-    }  
-    // this.state.currentUser.sendMessage = this.sendMessage.bind(this);      
+      gifs: [],
+      language: 'auto',
+    }      
     this.getRooms = this.getRooms.bind(this);
     this.onDrop = onDrop.bind(this);
     this.openImageUploadDialog = openImageUploadDialog.bind(this);
     this.closeImageUploadDialog = closeImageUploadDialog.bind(this);
     this.sendFile = sendFile.bind(this);
-  }      
+    // this.updateLanguage = updateLanguage.bind(this);
+  }   
+  
+
+  // RESOLVING PROMISES?????
+  componentWillUnmount(){
+    return Promise.resolve();
+  }
   
   sendMessage(currentUser) {
     const parts = [];
-      parts.push({
-        type: "text/plain",
-        content: `${this.state.chatInput}`,
-        // text: this.state.chatInput,
-      });
-      // console.log(this.state.emoji)
 
-      
-      if (this.state.emoji) {
-        this.state.emoji.forEach(emoji => {
-          parts.push({
-            url: emoji,
-            type: "image/gif",
-          });
+    // Check if input has / 
+    if (this.state.newMessage.startsWith("/")) {
+      handleSlashCommand.call(this, this.state.newMessage);
+    }
+    
+    // Push text to parts
+    parts.push({
+      type: "text/plain",
+      text: `${this.state.newMessage}`,
+      content: `${this.state.newMessage}`
+    });
+
+    // Push emoji67
+    if (this.state.emoji) {
+      this.state.emoji.forEach(emoji => {
+        parts.push({
+          url: emoji,
+          type: "gif",
+          className: "img-emoji"
         });
+        console.log(parts)
+      });
+    }
+
+    if (this.state.gifs) {
+      this.state.gifs.forEach(gif => {
+        parts.push({
+          url: gif,
+          type: "image/gif",
+          className: "gif"
+        });
+        console.log(parts)
+      });
     }
 
     if(this.state.chatInput){
@@ -95,20 +122,21 @@ class Chat extends Component {
       })
     }  
 
-
     this.setState({ 
-        chatInput: "",
-        newMessage: "",
-    })          
+      chatInput: "",
+      emoji: [],
+      parts: [],
+      gifs: [],
+      newMessage: "",
+    })   
+       
   }       
 
   handleInput(event){
     this.setState({
       fileUploadMessage: event.target.value,
     })
-    console.log(event.target.value)
   }
-
 
   handleClick(){
     if ( !this.state.paint ){
@@ -120,15 +148,7 @@ class Chat extends Component {
             paint: false,
         })
     }
-
   } 
-
-  // handleInput(event){
-  //   console.log(event.target.value)
-  //   this.setState({
-  //     chatInput: event.target.value
-  //   });
-  // }
 
   onSubmit(e){
     e.preventDefault();
@@ -140,7 +160,8 @@ class Chat extends Component {
       .isTypingIn({ roomId: this.state.roomId, })
       .catch(error => console.error('error', error))
       this.setState({
-        chatInput: event.target.value
+        chatInput: event.target.value,
+        newMessage: event.target.value
     });
   }
 
@@ -155,46 +176,47 @@ class Chat extends Component {
     .catch(err => console.log('error on joinableRooms: ', err))
   }
 
-
   subscribeToRoom(roomId) {
-      const {currentUser, currentRoom} = this.state;
-      // console.log(`Subskyrbuję to ${roomId}`)
+    const {currentUser, currentRoom} = this.state;
       
-      this.setState({
-          messages: [],
-          
-      })
-      return currentUser.subscribeToRoom({
+    this.setState({
+      messages: [],
+    })
+
+    return currentUser.subscribeToRoom({
           roomId: roomId,
           messageLimit: 100,
           hooks: {
             onMessage: message => {
-                            let newMessages = this.state.messages;    
-                            newMessages.push(<Message 
-                              currentUser= {
-                                this.state.currentUser
-                              }
-                              media={message.attachment}
-                              time = { format(new Date(`${message.updatedAt}`), 'HH:mm') }
-                              key={ 
-                                this.state.messages.length 
-                              } 
-                              senderId={ 
-                                message.senderId 
-                              }
-                              text={ message.text 
-                              }/>)         
-                              // this.setState({messages: newMessages}
-                              // () => this.showNotification(message));
-                              
-                              if (currentRoom === null) return;
+          
+              // console.log(message.text)    
+              
+                let newMessages = this.state.messages;   
+                // {translateText.call(this, message)}
+                newMessages.push(<Message 
+                  currentUser= {
+                    this.state.currentUser
+                  }
+                  
+                  media={message.attachment}
+                  time = { format(new Date(`${message.updatedAt}`), 'HH:mm') }
+                  key={ 
+                    this.state.messages.length 
+                  } 
+                  senderId={ 
+                    message.senderId 
+                  }
+                  text={ message.text 
+                  }
+                  linktext={message.text.match(/\b(http|https)?:\/\/\S+/gi) || null}/>)         
+                  {this.setState({messages: newMessages})}
+                  // () => this.showNotification(message));
+                  
+                  if (currentRoom === null) return;
               return currentUser.setReadCursor({
                 roomId: roomId,
                 position: message.id,
-              });
-
-                            
-
+              });           
             },
             onRoomUpdated: room => {
               const { rooms } = this.state;
@@ -222,23 +244,28 @@ class Chat extends Component {
 
           
           },
-      })   
+    })   
 
-      // .then(this.setState({
-      //   currentUser,
-      // }, () => this.grantNotificationPermission()
-      // ))
-      .then(currentRoom => {
-        this.setState({ currentRoom })
-      })
-      .then( this.getRooms())
-      .catch(error => console.error('error', error))
+    // .then(this.setState({
+    //   currentUser,
+    // }, () => this.grantNotificationPermission()
+    // ))
+    .then(currentRoom => {
+      this.setState({ currentRoom })
+    })
+    .then( this.getRooms())
+    .catch(error => console.error('error', error))
   }
-
   
   showEmojiPicker() {
     this.setState({
       openEmojiPicker: !this.state.openEmojiPicker,
+    })
+  }
+
+  showGiphyPicker() {
+    this.setState({
+      openGiphyPicker: !this.state.openGiphyPicker,
     })
   }
 
@@ -249,16 +276,15 @@ class Chat extends Component {
     const isPrivateChatCreated = this.state.currentUser.rooms.filter( (room) => {
       if (room.customData && room.customData.isDirectMessage) {
         
-            const arr = [this.state.currentUser.id, ids.id];
-            const { userIds } = room.customData;
-      
-            if (arr.sort().join('') === userIds.sort().join('')) {
-              return {
-                room,
-              };
-            }
+          const arr = [this.state.currentUser.id, ids.id];
+          const { userIds } = room.customData;
+    
+          if (arr.sort().join('') === userIds.sort().join('')) {
+            return {
+              room,
+            };
           }
-        
+        }
     });
     
     if (isPrivateChatCreated.length > 0) {
@@ -282,10 +308,6 @@ class Chat extends Component {
       .then(this.getRooms())
       .catch(err => console.log('error with createRoom: ', err))
     }
-  }
-
-  componentWillUnmount(){
-    return Promise.resolve();
   }
 
   // grantNotificationPermission = () => {
@@ -324,38 +346,30 @@ class Chat extends Component {
   //     }
 
   // // };
+  
   addEmoji(e, object, event) {
-    //  console.log(e.unified)
-    console.log(object)
-    //  console.log(event)
     const { newMessage } = this.state;
-
-    //  jsemoji.replace_colons(`:${object.name}:`)
-    //  console.log(jsemoji)
     let emoji = jsemoji.replace_colons(`:${object.name}:`);
     const text = `${newMessage}:${object.name}:`;
     let path = `${jsemoji.img_sets.emojione.path}${object.unified}.png`
 
-    console.log(emoji)
-
-     this.setState({
-      //  newMessage:`${newMessage}`,
-       openEmojiPicker: false,
-       chatInput: `${this.state.chatInput}${text}`,
-       emoji: [...this.state.emoji, path]
-     });
-     console.log(this.state.newMessage)
+    this.setState({
+      openEmojiPicker: false,
+      chatInput: `${this.state.chatInput}${text}`,
+      newMessage: `${this.state.chatInput}`,
+      emoji: [...this.state.emoji, path]
+    });
   }
 
   createRoom(name) {
     this.state.currentUser.createRoom({
-        name,
-        addUserIds: [ ...(this.state.currentUser.users.map( (user) =>{
-          return user.id;
-        }) ) ],
-        customData: {
-          isDirectMessage: false,
-        },
+      name,
+      addUserIds: [ ...(this.state.currentUser.users.map( (user) =>{
+        return user.id;
+      }) ) ],
+      customData: {
+        isDirectMessage: false,
+      },
     })
     .then(room => this.subscribeToRoom(room.id))
     .then(this.getRooms())
@@ -367,8 +381,9 @@ class Chat extends Component {
       instanceLocator: 'v1:us1:bca0fa4c-b9c7-4478-a63d-ad0d81584e73',
       userId: this.props.currentUsername,
       tokenProvider: new Chatkit.TokenProvider({
-      url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/bca0fa4c-b9c7-4478-a63d-ad0d81584e73/token',
+        url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/bca0fa4c-b9c7-4478-a63d-ad0d81584e73/token',
       }),
+      
     })
     chatManager
       .connect()
@@ -379,11 +394,23 @@ class Chat extends Component {
       })      
       .catch(error => console.error('error', error))
   }   
-
+  
+  log (gif) {
+    this.setState({
+      chatInput: [gif.downsized.url],
+      gifs: [gif.downsized.url],
+      openGiphyPicker: !this.state.openGiphyPicker,
+    })
+  }
 
   render() {
     const {currentUser, currentRoom, joinableRooms, joinedRooms, roomId, paint, typingUsers, messages, chatInput, showImageUploadDialog,
-    fileUploadMessage, openEmojiPicker} = this.state
+    fileUploadMessage, openEmojiPicker, newMessage, openGiphyPicker, language} = this.state
+    
+    const ROOT_CSS = css({
+      height: '100%',
+      width: '100%'
+    });
 
     return ( 
       <div className="container">
@@ -399,10 +426,24 @@ class Chat extends Component {
                             sendDM={ (e) => this.sendDM(e)}
                             handleMouseDown={ (e) => this.handleMouseDown(e) } 
             />
+             {/* {currentRoom ? (
+                <select
+                  id="language"
+                  className="language"
+                  name="language"
+                  value={language}
+                  onChange={(e) => this.updateLanguage(e)}
+                >
+                  <option value="en">English</option>
+                  <option value="fr">French</option>
+                  <option value="es">Spanish</option>
+                  <option value="de">German</option>
+                </select>
+              ) : null} */}
         </div>
         <div className="messanger-container">
           <div className="upper-container"> 
-          <UpperContainer currentUser={currentUser}
+            <UpperContainer currentUser={currentUser}
                         users={currentRoom.users}
                         currentRoom={currentRoom}
                         rooms={[...joinableRooms, ...joinedRooms]}
@@ -416,9 +457,15 @@ class Chat extends Component {
               <Canvas currentUser={currentUser} />
             ) : (
             <div className="messages-list">
+              
                 <ul className="messages">
+                <ScrollToBottom className={ ROOT_CSS }>
                   {messages} 
+                  </ScrollToBottom>
                 </ul>
+
+                {/* {messageList}
+           */}
                 {/* <TypingIndicator typingUsers={typingUsers} /> 
                 <form id="chat-form"
                   className="composer-container"
@@ -453,6 +500,8 @@ class Chat extends Component {
               /> */}
             {/* ) : null}                */}
             </div>  )}
+            
+          
           </div>
             <div className="side-container">Jestem z boku!</div>
           </div>
@@ -477,6 +526,7 @@ class Chat extends Component {
                        placeholder='Type message...'
                        name=""
                        value={ chatInput } 
+                  
                        autoFocus={true} 
                        onChange={ e => this.sendTypingEvent(e) } 
                        />     
@@ -486,34 +536,45 @@ class Chat extends Component {
                     type="button"
                     className="btn emoi-picker"
                   >  
-                <Smile style={{backgroundColor: "#fff"}}/></button> 
+                    <Smile style={{backgroundColor: "#fff"}}/>  
+                  </button> 
+                  <button type="button" className="giphy-button" onClick={(e)=>this.showGiphyPicker(e)}>
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="icons" className="svg-inline--fa fa-icons fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M116.65 219.35a15.68 15.68 0 0 0 22.65 0l96.75-99.83c28.15-29 26.5-77.1-4.91-103.88C203.75-7.7 163-3.5 137.86 22.44L128 32.58l-9.85-10.14C93.05-3.5 52.25-7.7 24.86 15.64c-31.41 26.78-33 74.85-5 103.88zm143.92 100.49h-48l-7.08-14.24a27.39 27.39 0 0 0-25.66-17.78h-71.71a27.39 27.39 0 0 0-25.66 17.78l-7 14.24h-48A27.45 27.45 0 0 0 0 347.3v137.25A27.44 27.44 0 0 0 27.43 512h233.14A27.45 27.45 0 0 0 288 484.55V347.3a27.45 27.45 0 0 0-27.43-27.46zM144 468a52 52 0 1 1 52-52 52 52 0 0 1-52 52zm355.4-115.9h-60.58l22.36-50.75c2.1-6.65-3.93-13.21-12.18-13.21h-75.59c-6.3 0-11.66 3.9-12.5 9.1l-16.8 106.93c-1 6.3 4.88 11.89 12.5 11.89h62.31l-24.2 83c-1.89 6.65 4.2 12.9 12.23 12.9a13.26 13.26 0 0 0 10.92-5.25l92.4-138.91c4.88-6.91-1.16-15.7-10.87-15.7zM478.08.33L329.51 23.17C314.87 25.42 304 38.92 304 54.83V161.6a83.25 83.25 0 0 0-16-1.7c-35.35 0-64 21.48-64 48s28.65 48 64 48c35.2 0 63.73-21.32 64-47.66V99.66l112-17.22v47.18a83.25 83.25 0 0 0-16-1.7c-35.35 0-64 21.48-64 48s28.65 48 64 48c35.2 0 63.73-21.32 64-47.66V32c0-19.48-16-34.42-33.92-31.67z"></path></svg>
+                  </button>
               </div>  
             </form>
-             
+
+              <TypingIndicator typingUsers={typingUsers} /> 
+
+              {openGiphyPicker? (
+              <div className="giphy-dialog">
+                  <Picker onSelected={this.log.bind(this)} />
+                </div>) : null
+              }
                
-             {openEmojiPicker? (
-               (<div className="dialog-emoji-container">
-                 <div className="dialog-emoji">
-                    <EmojiPicker onEmojiClick={(e, object, event) => this.addEmoji(e, object,event)} />
-                 </div>
-               </div>)
+              {openEmojiPicker? (
+                (<div className="dialog-emoji-container">
+                   <div className="dialog-emoji">
+                      <EmojiPicker onEmojiClick={(e, object, event) => this.addEmoji(e, object, event)} />
+                   </div>
+                 </div>)
               ) : null}    
                
-             {showImageUploadDialog ? (
-              <ImageUploadDialog
-                handleInput={ e => this.handleInput(e)}
-                // sendMessage={this.sendMessage}
-                // value={ chatInput } 
-                // onSubmit={ (e) => this.onSubmit(e)}
-                fileUploadMessage={fileUploadMessage}
-                onDrop={this.onDrop}
-                sendFile={this.sendFile}
-                closeImageUploadDialog={this.closeImageUploadDialog}
-              /> 
+              {showImageUploadDialog ? (
+                <ImageUploadDialog
+                  handleInput={ e => this.handleInput(e)}
+                  // sendMessage={this.sendMessage}
+                  // value={ chatInput } 
+                  // onSubmit={ (e) => this.onSubmit(e)}
+                  fileUploadMessage={fileUploadMessage}
+                  onDrop={this.onDrop}
+                  sendFile={this.sendFile}
+                  closeImageUploadDialog={this.closeImageUploadDialog}
+                /> 
+                
+                ) : null}    
+                  
               
-               ) : null}    
-                 
-              <TypingIndicator typingUsers={typingUsers} /> 
               </div>
           </div>
         </div>

@@ -5,6 +5,8 @@ const cors = require('cors')
 const Chatkit = require('@pusher/chatkit-server')
 const app = express()
 const Pusher = require('pusher');
+const AWS = require('aws-sdk');
+const axios = require('axios');
 
 const port = process.env.PORT || 4000;
 const pusher = new Pusher({
@@ -14,10 +16,13 @@ const pusher = new Pusher({
   cluster: "eu",
 });
 
+
+
 // Init chatkit instance
 const chatkit = new Chatkit.default({
   instanceLocator: `v1:us1:3046b544-c410-45af-a75e-76de8c1c2865`,
   key: 'fbb8f373-e11f-4c9b-8f5f-0ad8cd672e3e:JlSRN0yOOpq4jG0MwHeh9nlAeH+IMTOT6cKaoFXC1cE=',
+  
 })
 
 app.use(bodyParser.json())
@@ -33,19 +38,42 @@ app.use((req, res, next) => {
   next();
 });
 
+const translate = new AWS.Translate({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: 'us-east-2',
+});
+
+
+app.post('/translate', (req, res) => {
+  const { text, lang } = req.body;
+  const params = {
+    SourceLanguageCode: 'auto',
+    TargetLanguageCode: lang,
+    Text: text,
+  };
+
+  translate.translateText(params, (err, data) => {
+    if (err) {
+      return res.send(err);
+    };
+
+    res.json(data);
+  });
+});
 
 // Post methord to create users
-app.post('http://localhost:4000/users', (req, res) => {
+app.post('/users', (req, res) => {
   const { username } = req.body
   console.log(username);
   chatkit
     .createUser({ 
       id: username, 
       name: username,
-      // avatarUrl: null,
-      // customData: {
-      //   password: null,
-      // }
+      avatarUrl: null,
+      customData: {
+        password: null,
+      }
     })
     .then(() => {
       console.log(res)
@@ -59,6 +87,10 @@ app.post('http://localhost:4000/users', (req, res) => {
       }
     })
 })
+
+
+
+
 
 // app.post("/authenticate", (req, res) => {
 //   const authData = chatkit.authenticate({ userId: req.query.user_id });
