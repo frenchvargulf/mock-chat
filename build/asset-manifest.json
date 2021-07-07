@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.d6e4fb9a.chunk.css",
+    "main.js": "/static/js/main.4c246324.chunk.js",
+    "main.js.map": "/static/js/main.4c246324.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.edbf6e9c.js",
+    "runtime~main.js.map": "/static/js/runtime~main.edbf6e9c.js.map",
+    "static/css/2.31388950.chunk.css": "/static/css/2.31388950.chunk.css",
+    "static/js/2.2f597af4.chunk.js": "/static/js/2.2f597af4.chunk.js",
+    "static/js/2.2f597af4.chunk.js.map": "/static/js/2.2f597af4.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.88b6fa2da474de824ba0dd5d3a09d28d.js": "/precache-manifest.88b6fa2da474de824ba0dd5d3a09d28d.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.31388950.chunk.css.map": "/static/css/2.31388950.chunk.css.map",
+    "static/css/main.d6e4fb9a.chunk.css.map": "/static/css/main.d6e4fb9a.chunk.css.map",
+    "static/media/UploadIcon.svg": "/static/media/UploadIcon.1cedb6e9.svg",
+    "static/media/annabelle.png": "/static/media/annabelle.d5f1cd84.png",
+    "static/media/yoda.png": "/static/media/yoda.5db778e4.png"
+  }
+}

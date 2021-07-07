@@ -1,0 +1,260 @@
+body{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+// input {
+//   border:none;
+//   background-image:none;
+//   background-color:transparent;
+//   -webkit-box-shadow: none;
+//   -moz-box-shadow: none;
+//   box-shadow: none;
+//   outline: none;
+// }
+ 
+// img{
+//   width: auto;
+//   height: auto;
+// }
+
+.emoji {
+  width: 16px;
+  height: 16px;
+}
+
+// First layer of layout
+
+.container {
+  display: flex;
+  min-width: 300px;
+  max-width: 100%;
+  max-height: 100vh;
+  position: relative;
+  background-color: #fff;
+  position: relative;
+  overflow:hidden;
+} 
+
+.sidebar-container{
+  min-width: 218px;
+  max-height: 100vh;
+  color: #bcabbc;
+  position: relative;
+  padding: 0;
+  background-color: #3F0E40;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 5px;
+}
+
+.messanger-container {
+  min-height: 1px;
+  height: 100vh;
+  min-width: 1px;
+  width: 100%;
+  padding: 0 5px 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// Second layer of layout
+
+
+.upper-container{
+  min-height:50px;
+  padding-left: 35px;
+  border-bottom: 1px solid #e2e2e2;
+  color: #e2e2e2;
+}
+
+.lower-container{
+  display: flex;
+  min-height: 0;
+  height: 100%;
+}
+
+.bottom-cnt{
+  min-height: 50px;
+  bottom: 0;
+  min-width: 0;
+}
+
+.wrap{
+  width: 100%;
+  min-height: 50px;
+}
+
+// Third layer
+.main-body-wrapper{
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.messages{
+  padding: 0 0 0 20px;
+  height: 100%;
+}
+
+.messages-list{
+  width:100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  min-height: 1px;
+  max-height: 470px;
+  flex-shrink: 1;
+  display:flex;
+  flex-direction: column;
+}
+
+.composer-container {
+  min-width: 1px;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 40px;
+  display: flex;
+  min-height: 50px;
+}
+
+
+.composer {
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  outline: none;
+  // background-color: #fbfbfb;
+  // min-width: 1px;
+  width: 100%;
+  // resize: vertical;
+  // border: 1px solid black;
+  // outline: none;
+  font-size: .85em;
+  display: flex;
+  justify-content: flex-start;
+  min-width: 1px;
+  margin: 0 auto;
+  padding: 10px 20px;
+}
+
+.copmoser:focus{
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.images {
+  max-width: 100%;
+  height: auto;
+}
+
+
+.side-container{
+  display: none;
+}
+
+// .menu-container {
+//   overflow: scroll;
+// }
+
+.emojis {
+  width: 16px;
+  height: 16px;
+}
+
+.files {
+  width: 100%;
+  height: auto;
+}
+
+
+::-webkit-scrollbar {
+  width: 10px; 
+  display: none;
+}
+
+::-webkit-scrollbar:hover{
+  display: block;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #3F0E40; 
+  border-radius: 10px;
+  display: block;
+  background-color: transparent;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(214, 154, 216, 0.5); 
+  opacity: 0.5;
+  opacity: 0.5;
+  border-radius: 10px;
+  color: transparent;
+  display: block;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover:first-of-type {
+  background: #3F0E40; 
+  display: block;
+}
+
+.emoi-picker{
+  position: relative;
+}
+
+.dialog-emoji-container {
+  position: absolute;
+  bottom: 8%;
+  right: -5%; 
+  overflow: hidden;
+}
+
+.giphy-dialog{
+  position: absolute;
+  bottom: 8%;
+  right: 0;
+  overflow: hidden;
+}
+.dialog-emoji{
+  position: relative;
+  width: 361px;
+  z-index: 1012;
+  font-size: .95rem;
+  line-height: 1rem;
+  outline: none;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 6px;
+}
+
+.username-header{
+  text-transform: uppercase;
+}
+
+.typing-div {
+  height: 40px;
+  width: 100%;
+  text-align: left;
+}
+
+.giphy-button {
+  outline: none;
+  border: none;
+  background: none;
+}

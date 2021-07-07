@@ -1,0 +1,149 @@
+// .room-title {
+//     text-transform: uppercase;
+//     font-weight: 700;
+//     text-align: center;
+//     margin: 0;
+//     padding: 20px 0 0 0;
+// }
+
+.user{
+    color: #fff;
+    .room-title{
+        text-align: left;
+        font-size: 20px;
+    }
+    .user-title{
+        font-size: 15px;
+    }
+}
+
+.rooms-list li {
+    cursor:pointer;
+}
+
+
+.active {
+    background-color: #1264a3;
+    cursor:pointer;
+    .room-name{
+        color: #fff;
+    }
+
+}
+
+.room-unread{
+    background-color: red;
+    color: #fff;
+    font-weight: 900;
+    border-radius: 50%;
+    padding: 0 6px;
+    margin-right: 10px;
+}
+
+
+.room-title {
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+}
+
+.room-title:hover{
+    color: #fff;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+
+.send-dm-btn {
+    opacity: 0.8;
+    color: rgb(188, 171, 188);
+    display: block;
+ 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 20px;
+    cursor: pointer;
+    position: relative;
+    font-weight: 700;
+    
+    
+}
+
+.send-dm-btn:hover{
+    color: #fff;
+}
+
+.send-dm-btn:before{
+    content:"";
+    width: 15px;
+    height: 15px;
+    border: 1px solid rgb(188, 171, 188);
+    border-radius: 50%;
+    position: absolute;
+    top: 20%;
+}
+
+
+.send-dm-btn:before:hover{
+    border: 1px solid #fff;
+}
+
+
+.rooms-list a {
+    text-decoration: none;
+    color: #bcabbc;
+}
+
+.new-room-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.new-room-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.room-input {
+    padding: 20px 0;
+    outline: none;
+    border: none;
+    width: 100%;
+    background-color: #3F0E40;
+    opacity: 90%;
+    color: dodgerblue;
+}
+
+.switch-button {
+    width: 100%;
+    outline: none;
+    border: none;
+    color: rgb(11, 25, 42);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 25px;
+    background-color: rgb(143, 117, 144);
+    opacity: 0.5;
+    padding: 10px;
+
+}
+
+.switch-button:hover{
+    color: #fff;
+}
+/* #create-room-btn {
+    padding: 20px;
+    outline: none;
+    border: none;
+    background-color: dodgerblue;
+} */
